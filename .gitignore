@@ -8,3 +8,5 @@
 *.pkl
 *.tensor
 *.bin
+*.faiss
+*.sqlite3
