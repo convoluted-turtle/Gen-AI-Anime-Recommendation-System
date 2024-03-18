@@ -1,0 +1,7 @@
+*.csv
+*.tsv
+*.pickle
+*.DS_Store
+*.pkl 
+*.json
+*.xlsx
