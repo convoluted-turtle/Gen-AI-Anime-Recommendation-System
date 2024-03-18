@@ -6,3 +6,5 @@
 *.json
 *.xlsx
 *.pkl
+*.tensor
+*.bin
