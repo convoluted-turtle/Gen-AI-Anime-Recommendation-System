@@ -10,3 +10,10 @@
 *.bin
 *.faiss
 *.sqlite3
+*.gguf
+*.gptq
+*.awq
+*.gitattributes
+*gguf 
+*.pyc
+*.DS_Store
