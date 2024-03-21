@@ -19,7 +19,7 @@ st.markdown("""
         background-color: goldenrod;
         color: black;
         padding: 10px;
-        line-height: 60px;
+        line-height: 50px;
         font-size: 25px;
         text-align: center;
     }
@@ -67,21 +67,21 @@ col1, col2, col3, col4 = st.columns([1, 1, 1, 2])
 with col1:
     st.write("<div style='margin-top: 10px;'> </div>", unsafe_allow_html=True)
     st.image(Image.open("2024-03-18_22-38-08.png"), width=300)
-    st.write("<p style='position: absolute; bottom:-30px; width: 100%; text-align: center; color: white; background-color: rgba(0, 0, 0, 0.5); padding: 5px;'>Anime 1</p>", unsafe_allow_html=True)
+    st.write("<p style='position: absolute; bottom:-35px; width: 90%; text-align: center; color: white; background-color: rgba(0, 0, 0, 0.5); padding: 5px;'>Anime 1</p>", unsafe_allow_html=True)
 
 
 
 with col2:
     st.write("<div style='margin-top: 10px;'> </div>", unsafe_allow_html=True)
     st.image(Image.open("2024-03-18_22-38-08.png"), width=300)
-    st.write("<p style='position: absolute; bottom: -30px; width: 100%; text-align: center; color: white; background-color: rgba(0, 0, 0, 0.5); padding: 5px;'>Anime 1</p>", unsafe_allow_html=True)
+    st.write("<p style='position: absolute; bottom: -35px; width: 90%; text-align: center; color: white; background-color: rgba(0, 0, 0, 0.5); padding: 5px;'>Anime 2</p>", unsafe_allow_html=True)
 
 
 
 with col3:
     st.write("<div style='margin-top: 10px;'> </div>", unsafe_allow_html=True)
     st.image(Image.open("2024-03-18_22-38-08.png"), width=300)
-    st.write("<p style='position: absolute; bottom: -30px; width: 100%; text-align: center; color: white; background-color: rgba(0, 0, 0, 0.5); padding: 5px;'>Anime 1</p>", unsafe_allow_html=True)
+    st.write("<p style='position: absolute; bottom: -35px; width: 90%; text-align: center; color: white; background-color: rgba(0, 0, 0, 0.5); padding: 5px;'>Anime 3</p>", unsafe_allow_html=True)
 
 
 with col4:
