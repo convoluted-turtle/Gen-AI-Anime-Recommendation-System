@@ -66,22 +66,37 @@ col1, col2, col3, col4 = st.columns([1, 1, 1, 2])
 
 with col1:
     st.write("<div style='margin-top: 10px;'> </div>", unsafe_allow_html=True)
-    st.image(Image.open("2024-03-18_22-38-08.png"), width=300)
-    st.write("<p style='position: absolute; bottom:-35px; width: 90%; text-align: center; color: white; background-color: rgba(0, 0, 0, 0.5); padding: 5px;'>Anime 1</p>", unsafe_allow_html=True)
+    image_url = "https://upload.wikimedia.org/wikipedia/en/8/85/Muramasa_The_Demon_Blade.jpg"
+    st.image(image_url, width=300)
+    st.markdown(
+        f"<p style='width: 300px; text-align: center; color: white; background-color: rgba(0, 0, 0, 0.5); padding: 5px;'>Anime 2</p>",
+        unsafe_allow_html=True
+    )
 
 
 
 with col2:
     st.write("<div style='margin-top: 10px;'> </div>", unsafe_allow_html=True)
-    st.image(Image.open("2024-03-18_22-38-08.png"), width=300)
-    st.write("<p style='position: absolute; bottom: -35px; width: 90%; text-align: center; color: white; background-color: rgba(0, 0, 0, 0.5); padding: 5px;'>Anime 2</p>", unsafe_allow_html=True)
+    image_url = "https://upload.wikimedia.org/wikipedia/en/7/71/Kyoshiro_to_Towa_no_Sora_volume_1_cover.jpg"
+    st.image(image_url, width=300)
+    st.markdown(
+        f"<p style='width: 300px; text-align: center; color: white; background-color: rgba(0, 0, 0, 0.5); padding: 5px;'>Anime 2</p>",
+        unsafe_allow_html=True
+    )
+    # st.write("<div style='margin-top: 10px;'> </div>", unsafe_allow_html=True)
+    # st.image(Image.open("https://upload.wikimedia.org/wikipedia/en/7/71/Kyoshiro_to_Towa_no_Sora_volume_1_cover.jpg"), width=300)
+    # st.write("<p style='position: absolute; bottom: -35px; width: 90%; text-align: center; color: white; background-color: rgba(0, 0, 0, 0.5); padding: 5px;'>Anime 2</p>", unsafe_allow_html=True)
 
 
 
 with col3:
     st.write("<div style='margin-top: 10px;'> </div>", unsafe_allow_html=True)
-    st.image(Image.open("2024-03-18_22-38-08.png"), width=300)
-    st.write("<p style='position: absolute; bottom: -35px; width: 90%; text-align: center; color: white; background-color: rgba(0, 0, 0, 0.5); padding: 5px;'>Anime 3</p>", unsafe_allow_html=True)
+    image_url = "https://upload.wikimedia.org/wikipedia/en/6/62/Ky%C5%8Dkai_no_Kanata_volume_1_cover.jpg"
+    st.image(image_url, width=300)
+    st.markdown(
+        f"<p style='width: 300px; text-align: center; color: white; background-color: rgba(0, 0, 0, 0.5); padding: 5px;'>Anime 2</p>",
+        unsafe_allow_html=True
+    )
 
 
 with col4:
