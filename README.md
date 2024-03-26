@@ -12,3 +12,7 @@ Gen-AI Anime Recommendation System
 
 
 
+docker build -t jonlin8188/cse6242:latest .
+docker run -p 8080:8080 --rm -it jonlin8188/cse6242:latest
+docker push jonlin8188/cse6242:latest
+[http](http://localhost:8080)
