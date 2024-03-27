@@ -1,0 +1,3 @@
+FROM python:3.11-slim-bullseye as model
+COPY ./data /data
+ 

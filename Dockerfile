@@ -4,29 +4,26 @@ RUN apt-get update && apt-get install -y git
 RUN git clone https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2 /tmp/model
 RUN rm -rf /tmp/model/.git
 
+FROM jonlin8188/cse6242-data:latest as data
+
 # Build the streamlit container
 FROM python:3.11-slim-bullseye
 ENV HOST=0.0.0.0 
 ENV LISTEN_PORT 8080
 EXPOSE 8080
 RUN apt-get update && apt-get install -y git build-essential
-COPY ./requirements.txt /app/requirements.txt
+COPY ./app/requirements.txt /app/requirements.txt
 RUN pip3 install --no-cache-dir --upgrade -r /app/requirements.txt --default-timeout=1000 --no-cache-dir
 WORKDIR /app
  
-# TODO project repo - move app into app folder along with assets
-
-# Temporary placeholder
-COPY ./2024-03-18_22-38-08.png /app/2024-03-18_22-38-08.png
-
-# Streamlit config
-COPY ./streamlit /app/.streamlit
-
-# Actual app
-COPY ./anime_app.py /app/anime_app.py
+# Copy streamlit assets
+COPY ./app /app
 
 # Huggingface embedding model
 COPY --from=model /tmp/model /app/embedding_model
+
+# Datasets
+COPY --from=data /data/ /app/data
 
 # https://fgiasson.com/blog/index.php/2023/08/23/how-to-deploy-hugging-face-models-in-a-docker-container/
 
