@@ -69,7 +69,7 @@ with col1:
     image_url = "https://upload.wikimedia.org/wikipedia/en/8/85/Muramasa_The_Demon_Blade.jpg"
     st.image(image_url, width=300)
     st.markdown(
-        f"<p style='width: 300px; text-align: center; color: white; background-color: rgba(0, 0, 0, 0.5); padding: 5px;'>Anime 2</p>",
+        f"<p style='width: 300px; text-align: center; color: white; background-color: rgba(0, 0, 0, 0.5); padding: 5px;'>Anime 1</p>",
         unsafe_allow_html=True
     )
 
@@ -91,10 +91,10 @@ with col2:
 
 with col3:
     st.write("<div style='margin-top: 10px;'> </div>", unsafe_allow_html=True)
-    image_url = "https://upload.wikimedia.org/wikipedia/en/6/62/Ky%C5%8Dkai_no_Kanata_volume_1_cover.jpg"
+    image_url = "https://static.wikia.nocookie.net/initiald/images/e/ec/First_Stage_logo.png"
     st.image(image_url, width=300)
     st.markdown(
-        f"<p style='width: 300px; text-align: center; color: white; background-color: rgba(0, 0, 0, 0.5); padding: 5px;'>Anime 2</p>",
+        f"<p style='width: 300px; text-align: center; color: white; background-color: rgba(0, 0, 0, 0.5); padding: 5px;'>Anime 3</p>",
         unsafe_allow_html=True
     )
 
