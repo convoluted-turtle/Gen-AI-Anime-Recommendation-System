@@ -19,4 +19,5 @@
 *.DS_Store
 *.webp
 .nosync
-/data/*
+app/data/*
+app/model/*

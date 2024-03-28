@@ -3,6 +3,8 @@ from umap import UMAP
 import plotly.express as px
 from PIL import Image
 
+import hfembeddings as hfembeddings
+
 # Set page title and layout
 st.set_page_config(page_title='CSE 6242: Casual Correlations- GenAI Anime Recommendations', layout='wide')
 

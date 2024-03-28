@@ -1,3 +1,4 @@
 FROM python:3.11-slim-bullseye as model
-COPY ./data /data
- 
+COPY ./app/data/ /data
+COPY ./app/model /model
+COPY ./app/embedding /embedding
