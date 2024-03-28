@@ -21,3 +21,4 @@
 .nosync
 app/data/*
 app/model/*
+app/embedding/*
