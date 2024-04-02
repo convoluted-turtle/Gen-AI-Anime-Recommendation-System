@@ -72,7 +72,7 @@ with st.sidebar:
     def filter_tokens(metadata):
         metadata_tokens = metadata.get("tokens", [])
         return any(token in metadata_tokens for token in query_token)
-    results = new_db.similarity_search(query, filter= filter_fn, k = 20)
+    results = new_db.similarity_search(query, filter= filter_tokens, k = 20)
     indexes = {x.metadata['anime_id']: index for index, x in enumerate(results)}
     cf_list = list(df[df['anime_id'].isin(list(indexes.keys()))]['cf_recs'])
     if cf_list is not None:
@@ -107,7 +107,7 @@ fig_bar = streamlit_bar_plot(top_anime_rating)
 
 fig_box = streamlit_box_whiskers(df[df['Studios'].isin(set(list(top_studios['Studios'])))])
 
-fig_umap, closet_anime_ids = streamlit_umap(recs_umap)
+fig_umap, closet_anime_name, closet_anime_ids = streamlit_umap(recs_umap)
 
 
 # Side title for all three images
@@ -120,7 +120,7 @@ with col1:
     image_url = "https://upload.wikimedia.org/wikipedia/en/8/85/Muramasa_The_Demon_Blade.jpg"
     st.image(image_url, width=300)
     st.markdown(
-        f"<p style='width: 300px; text-align: center; color: white; background-color: rgba(0, 0, 0, 0.5); padding: 5px;'>{closet_anime_ids[0]}</p>",
+        f"<p style='width: 300px; text-align: center; color: white; background-color: rgba(0, 0, 0, 0.5); padding: 5px;'>{closet_anime_name[0]}</p>",
         unsafe_allow_html=True
     )
 
@@ -129,7 +129,7 @@ with col2:
     image_url = "https://upload.wikimedia.org/wikipedia/en/7/71/Kyoshiro_to_Towa_no_Sora_volume_1_cover.jpg"
     st.image(image_url, width=300)
     st.markdown(
-        f"<p style='width: 300px; text-align: center; color: white; background-color: rgba(0, 0, 0, 0.5); padding: 5px;'>{closet_anime_ids[1]}</p>",
+        f"<p style='width: 300px; text-align: center; color: white; background-color: rgba(0, 0, 0, 0.5); padding: 5px;'>{closet_anime_name[1]}</p>",
         unsafe_allow_html=True
     )
 
@@ -139,7 +139,7 @@ with col3:
     image_url = "https://static.wikia.nocookie.net/initiald/images/e/ec/First_Stage_logo.png"
     st.image(image_url, width=300)
     st.markdown(
-        f"<p style='width: 300px; text-align: center; color: white; background-color: rgba(0, 0, 0, 0.5); padding: 5px;'>{closet_anime_ids[2]}</p>",
+        f"<p style='width: 300px; text-align: center; color: white; background-color: rgba(0, 0, 0, 0.5); padding: 5px;'>{closet_anime_name[2]}</p>",
         unsafe_allow_html=True
     )
 

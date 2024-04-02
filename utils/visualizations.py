@@ -4,9 +4,18 @@ import plotly.graph_objects as go
 from sentence_transformers import SentenceTransformer
 from umap import UMAP
 from sklearn.neighbors import NearestNeighbors
+from typing import Tuple, List
 
+def streamlit_bar_plot(df: pd.DataFrame) -> go.Figure:
+    """
+    Generate a bar plot for anime ratings.
 
-def streamlit_bar_plot(df):
+    Args:
+    - df (pd.DataFrame): DataFrame containing anime ratings data.
+
+    Returns:
+    - fig (go.Figure): Plotly bar plot.
+    """
     # Reset bar plot to default state
     fig = px.bar(df.sort_values(by="anime_Score", ascending=True), x='anime_Score', y='Name', title="Ratings of Popular Anime", orientation='h')
     
@@ -18,13 +27,19 @@ def streamlit_bar_plot(df):
 
     return fig
 
-def streamlit_box_whiskers(df):
+def streamlit_box_whiskers(df: pd.DataFrame) -> go.Figure:
+    """
+    Generate a box plot for anime favorites distribution by studios.
+
+    Args:
+    - df (pd.DataFrame): DataFrame containing anime favorites and studios data.
+
+    Returns:
+    - fig_box (go.Figure): Plotly box plot.
+    """
     # Create vertical box plot for the filtered data
     fig_box = px.box(df, x='Studios', y='Favorites', color='Studios', 
                      title="Favorites to Studios Distribution", orientation='v', custom_data=['Name'])
-
-    # Get the indices of maximum values
-    max_indices = df.groupby('Studios')['Favorites'].idxmax()
 
     # Add text labels for maximum values
     fig_box.update_traces(
@@ -34,8 +49,17 @@ def streamlit_box_whiskers(df):
     
     return fig_box
 
+def streamlit_umap(recs_umap: pd.DataFrame) -> Tuple[go.Figure, List[str]]:
+    """
+    Generate a UMAP plot for anime recommendations.
 
-def streamlit_umap(recs_umap):
+    Args:
+    - recs_umap (pd.DataFrame): DataFrame containing UMAP data for anime recommendations.
+
+    Returns:
+    - fig_umap (go.Figure): Plotly scatter plot for UMAP.
+    - closest_anime_ids (List[str]): List of anime IDs for the closest points to the marked point.
+    """
     # Load a pre-trained Sentence Transformer model
     model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
 
@@ -73,8 +97,11 @@ def streamlit_umap(recs_umap):
     nn_model.fit(umap_result)
     distances, indices = nn_model.kneighbors([umap_result[0]])
 
-    # Collect anime IDs of the three closest points
-    closest_anime_ids = umap_df.loc[indices[0][1:], 'Name'].tolist()
+    # Collect anime Name of the three closest points
+    closest_anime_names = umap_df.loc[indices[0][1:], 'Name'].tolist()
+
+     # Collect anime IDs of the three closest points
+    closest_anime_ids = umap_df.loc[indices[0][1:], 'anime_id'].tolist()
 
     # Plot red X symbol on the closest points (excluding the marked point)
     for i, idx in enumerate(indices[0][1:], start=1):
@@ -89,4 +116,4 @@ def streamlit_umap(recs_umap):
                                           "Studios: %{customdata[0]}<br>" +
                                           "<extra></extra>")
 
-    return fig_umap, closest_anime_ids
+    return fig_umap, closest_anime_names, closest_anime_ids
