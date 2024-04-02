@@ -18,6 +18,10 @@
 *.pyc
 *.DS_Store
 *.webp
+<<<<<<< HEAD
 .nosync
 /data/*
 *.yaml
+=======
+*.yaml
+>>>>>>> c553fd856ba9948f8e8d8550ef2eb6ed91832b12
