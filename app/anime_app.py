@@ -71,8 +71,8 @@ with st.sidebar:
     query_token = textprepo.preprocess_text(query)
     def filter_tokens(metadata):
         metadata_tokens = metadata.get("tokens", [])
-        return any(token in metadata_tokens for token in query_token)
-    results = new_db.similarity_search(query, filter= filter_tokens, k = 20)
+        return any(token in metadata_tokens for token in query_token) and metadata["score"] > 6.0
+    results = new_db.similarity_search(query, filter= filter_tokens, k = 30)
     indexes = {x.metadata['anime_id']: index for index, x in enumerate(results)}
     cf_list = list(df[df['anime_id'].isin(list(indexes.keys()))]['cf_recs'])
     if cf_list is not None:
@@ -84,7 +84,7 @@ with st.sidebar:
     recs = df[df['anime_id'].isin(joined_list + pop_recs + vd_recs)]
     recs2 = df[df['anime_id'].isin(joined_list +  vd_recs)]
     descriptions = recs['anime_Synopsis'].tolist()
-    response = chat.send_message(f'You are a recommendation AI look at the following animes and summarize it into 5 sentences on why the user might like it: {descriptions}')
+    response = chat.send_message(f'You are a recommendation AI look at the following animes and summarize it into 5 sentences on why the user might like it: \n {descriptions}')
     if st.button("Send"):
         st.write(f"You: {query}")
         st.write(f"AI: Here are your recommendations: {response.text}")
@@ -136,7 +136,7 @@ with col2:
 
 with col3:
     st.write("<div style='margin-top: 10px;'> </div>", unsafe_allow_html=True)
-    image_url = "https://static.wikia.nocookie.net/initiald/images/e/ec/First_Stage_logo.png"
+    image_url = "https://cdn.myanimelist.net/images/anime/8/62593.jpg"
     st.image(image_url, width=300)
     st.markdown(
         f"<p style='width: 300px; text-align: center; color: white; background-color: rgba(0, 0, 0, 0.5); padding: 5px;'>{closet_anime_name[2]}</p>",
