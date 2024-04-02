@@ -18,5 +18,4 @@
 *.pyc
 *.DS_Store
 *.webp
-.nosync
-/data/*
+*.yaml
