@@ -67,7 +67,7 @@ def streamlit_umap(recs_umap: pd.DataFrame) -> Tuple[go.Figure, List[str]]:
     embeddings = model.encode(recs_umap['anime_Synopsis'].tolist())
 
     # Apply UMAP for dimensionality reduction
-    umap_model = UMAP(n_components=2, n_neighbors=5, min_dist=0.05)
+    umap_model = UMAP(n_components=2, n_neighbors=5, min_dist=0.05,  metric= 'cosine')
     umap_result = umap_model.fit_transform(embeddings)
 
     # Convert UMAP result to DataFrame
@@ -103,6 +103,12 @@ def streamlit_umap(recs_umap: pd.DataFrame) -> Tuple[go.Figure, List[str]]:
      # Collect anime IDs of the three closest points
     closest_anime_ids = umap_df.loc[indices[0][1:], 'anime_id'].tolist()
 
+    # Update hover template to include only 'Name' and 'Studios'
+    fig_umap.update_traces(customdata=umap_df[['Studios', 'Name']],
+                            hovertemplate="<b>%{customdata[1]}</b><br>" +
+                                          "Studios: %{customdata[0]}<br>" +
+                                          "<extra></extra>")
+
     # Plot red X symbol on the closest points (excluding the marked point)
     for i, idx in enumerate(indices[0][1:], start=1):
         target_x = umap_df.loc[idx, 'UMAP_1']
@@ -110,10 +116,13 @@ def streamlit_umap(recs_umap: pd.DataFrame) -> Tuple[go.Figure, List[str]]:
         fig_umap.add_trace(go.Scatter(x=[target_x], y=[target_y], mode='markers', showlegend=True,
                                       marker=dict(symbol='x', size=10, color='red'), name=f'rec {i}'))
 
-    # Update hover template to include only 'Name' and 'Studios'
-    fig_umap.update_traces(customdata=umap_df[['Studios', 'Name']],
-                            hovertemplate="<b>%{customdata[1]}</b><br>" +
-                                          "Studios: %{customdata[0]}<br>" +
-                                          "<extra></extra>")
+    
+    # Remove x-axis and y-axis labels
+    fig_umap.update_layout(xaxis=dict(title_text=''), yaxis=dict(title_text=''))
+    # Remove x-axis and y-axis labels, ticks, and gridlines
+    fig_umap.update_layout(xaxis=dict(showticklabels=False, showgrid=False, zeroline=False),
+                           yaxis=dict(showticklabels=False, showgrid=False, zeroline=False))
+    # Set light gray background with higher opacity
+    fig_umap.update_layout(plot_bgcolor='rgba(220, 220, 220, 0.1)')
 
     return fig_umap, closest_anime_names, closest_anime_ids
