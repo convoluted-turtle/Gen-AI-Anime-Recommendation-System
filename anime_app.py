@@ -76,24 +76,23 @@ with st.sidebar:
     query_token = textprepo.preprocess_text(query)
     def filter_fn(metadata):
         return any(word in query for word in list(query_token))
-    results = new_db.similarity_search(query, filter= filter_fn, k = 5)
-    intros = set([x.page_content for x in results])
-    response = chat.send_message(f'You are a recommendation AI look at the following animes and summarize it into 3 sentences on why the user might like it: {intros}')
+    results = new_db.similarity_search(query, filter= filter_fn, k = 20)
+    indexes = {x.metadata['anime_id']: index for index, x in enumerate(results)}
+    cf_list = list(df[df['anime_id'].isin(list(indexes.keys()))]['cf_recs'])
+    if cf_list is not None:
+        joined_list = [item for sublist in cf_list if sublist is not None for item in sublist if item is not None]
+
+    pop_recs = list(df.head(1)['popular_recs'])[0]
+    vd_recs = list(indexes.keys())
+
+    recs = df[df['anime_id'].isin(joined_list + pop_recs + vd_recs)]
+    recs2 = df[df['anime_id'].isin(joined_list +  vd_recs)]
+    descriptions = recs['anime_Synopsis'].tolist()
+    response = chat.send_message(f'You are a recommendation AI look at the following animes and summarize it into 5 sentences on why the user might like it: {descriptions}')
     if st.button("Send"):
         st.write(f"You: {query}")
         st.write(f"AI: Here are your recommendations: {response.text}")
 
-
-indexes = {x.metadata['anime_id']: index for index, x in enumerate(results)}
-cf_list = list(df[df['anime_id'].isin(list(indexes.keys()))]['cf_recs'])
-if cf_list is not None:
-    joined_list = [item for sublist in cf_list if sublist is not None for item in sublist if item is not None]
-
-pop_recs = list(df.head(1)['popular_recs'])[0]
-vd_recs = list(indexes.keys())
-
-recs = df[df['anime_id'].isin(joined_list + pop_recs + vd_recs)]
-recs2 = df[df['anime_id'].isin(joined_list +  vd_recs)]
 
 top_anime_rating = recs2[recs2['anime_Score']!='UNKNOWN'].sort_values(by='anime_Score', ascending=False).head(5)
 top_studios = recs2.sort_values(by='Favorites', ascending=False).head(5)
@@ -122,13 +121,13 @@ umap_result = umap_model.fit_transform(embeddings)
 # Convert UMAP result to DataFrame
 umap_df = pd.DataFrame(umap_result, columns=['UMAP_1', 'UMAP_2'])
 
-# Add 'Studios' and 'anime_id' columns to the UMAP DataFrame
+# Add 'Studios' and 'Name' columns to the UMAP DataFrame
 umap_df['Studios'] = recs_umap['Studios'].tolist()
 umap_df['Name'] = recs_umap['Name'].tolist()
 umap_df['rec_label'] = recs_umap['rec_label'].tolist()
 umap_df['anime_id'] = recs_umap['anime_id'].tolist()
 
-# Plot the UMAP with color by 'rec_label' and hover information including 'Studios' and 'Name'
+# Plot the UMAP with color by 'rec_label'
 fig_umap = px.scatter(umap_df, x='UMAP_1', y='UMAP_2', color='rec_label', 
                       hover_data={'Studios': True, 'Name': True},
                       title='UMAP of Anime Recommendations from Collab Filter, Vector Database and Popular Recommendations')
@@ -149,6 +148,13 @@ distances, indices = nn_model.kneighbors([umap_result[0]])
 # Collect anime IDs of the three closest points
 closest_anime_ids = umap_df.loc[indices[0][1:], 'Name'].tolist()
 
+
+
+# Update hover template to include only 'Name' and 'Studios'
+fig_umap.update_traces(customdata=umap_df[['Studios', 'Name']],
+                        hovertemplate="<b>%{customdata[1]}</b><br>" +
+                                      "Studios: %{customdata[0]}<br>" +
+                                      "<extra></extra>")
 # Plot red X symbol on the closest points (excluding the marked point)
 for i, idx in enumerate(indices[0][1:], start=1):
     target_x = umap_df.loc[idx, 'UMAP_1']
@@ -156,19 +162,20 @@ for i, idx in enumerate(indices[0][1:], start=1):
     fig_umap.add_trace(go.Scatter(x=[target_x], y=[target_y], mode='markers', showlegend=True,
                                   marker=dict(symbol='x', size=10, color='red'), name=f'rec {i}'))
 
-# Create descending bar plot
-fig_bar = px.bar(top_anime_rating, x='anime_Score', y='Name', color='Name',
-                 title="Ratings of Popular Anime", orientation='h')
+# Reset bar plot to default state
+fig_bar = px.bar(top_anime_rating.sort_values(by='anime_Score', ascending=True), 
+                 x='anime_Score', y='Name', title="Ratings of Popular Anime", orientation='h')
 
-# Determine the buffer region
+# Set Tableau Blue color palette
+tableau_blue_palette = ['#4e79a7', '#f28e2c', '#e15759', '#76b7b2', '#59a14f']
+
+# Set colors for bars using Tableau Blue palette
+fig_bar.update_traces(marker_color=tableau_blue_palette)
 buffer_region = 0.1 * (top_anime_rating['anime_Score'].max() - top_anime_rating['anime_Score'].min())
 
 # Set the range of the x-axis with a buffer region below the minimum score and above the maximum score
 fig_bar.update_xaxes(range=[top_anime_rating['anime_Score'].min() - buffer_region, top_anime_rating['anime_Score'].max() + buffer_region])
-# Define shades of blue
-blue_palette = ['#aec7e8', '#7b9fcf', '#1f77b4', '#03539e', '#003f5c']
-# Set colors for bars
-fig_bar.update_traces(marker_color=blue_palette)
+
 
 # Create vertical box plot for the filtered data
 fig_box = px.box(df[df['Studios'].isin(set(list(top_studios['Studios'])))], 
