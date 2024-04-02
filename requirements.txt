@@ -25,3 +25,4 @@ streamlit==1.32.2
 tokenizers==0.15.2
 transformers==4.37.2
 umap-learn==0.5.5
+guidance==0.1.10
