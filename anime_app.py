@@ -93,8 +93,10 @@ pop_recs = list(df.head(1)['popular_recs'])[0]
 vd_recs = list(indexes.keys())
 
 recs = df[df['anime_id'].isin(joined_list + pop_recs + vd_recs)]
-top_anime_rating = recs[recs['anime_Score']!='UNKNOWN'].sort_values(by='anime_Score', ascending=False).head(5)
-top_studios = recs.sort_values(by='Favorites', ascending=False).head(5)
+recs2 = df[df['anime_id'].isin(joined_list +  vd_recs)]
+
+top_anime_rating = recs2[recs2['anime_Score']!='UNKNOWN'].sort_values(by='anime_Score', ascending=False).head(5)
+top_studios = recs2.sort_values(by='Favorites', ascending=False).head(5)
 top_anime_rating['anime_Score'] = top_anime_rating['anime_Score'].astype(float)
 
 recs_umap = recs[['Studios', 'anime_Synopsis', 'Name', 'anime_id']]
