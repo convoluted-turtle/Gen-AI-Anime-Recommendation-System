@@ -20,3 +20,4 @@
 *.webp
 .nosync
 /data/*
+*.yaml
