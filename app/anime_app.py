@@ -60,8 +60,8 @@ embedding_function = HuggingFaceEmbeddings(
 )
 
 #Load in data
-new_db = FAISS.load_local("/Users/justinvhuang/Desktop/CSE-6242-Group-Project/vector_database_creation/faiss_anime_index_v2", embedding_function)
-df = pd.read_json("/Users/justinvhuang/Desktop/CSE-6242-Group-Project/fin_anime_dfv1.json")
+new_db = FAISS.load_local("/Users/justinvhuang/Desktop/CSE-6242-Group-Project/vector_database_creation/faiss_anime_index_v3", embedding_function)
+df = pd.read_json("/Users/justinvhuang/Desktop/CSE-6242-Group-Project/app/fin_anime_dfv2.json")
 
 # Create sidebar
 with st.sidebar:
@@ -73,8 +73,8 @@ with st.sidebar:
         metadata_tokens = metadata.get("tokens", [])
         return any(token in metadata_tokens for token in query_token) and metadata["score"] > 6.0
     results = new_db.similarity_search(query, filter= filter_tokens, k = 30)
-    indexes = {x.metadata['anime_id']: index for index, x in enumerate(results)}
-    cf_list = list(df[df['anime_id'].isin(list(indexes.keys()))]['cf_recs'])
+    indexes = {x.metadata['name']: index for index, x in enumerate(results)}
+    cf_list = list(df[df['Name'].isin(list(indexes.keys()))]['cf_recs'])
     if cf_list is not None:
         joined_list = [item for sublist in cf_list if sublist is not None for item in sublist if item is not None]
 
@@ -117,7 +117,7 @@ col1, col2, col3, col4 = st.columns([1, 1, 1, 2])
 
 with col1:
     st.write("<div style='margin-top: 10px;'> </div>", unsafe_allow_html=True)
-    image_url = "https://upload.wikimedia.org/wikipedia/en/8/85/Muramasa_The_Demon_Blade.jpg"
+    image_url = df[df["anime_id"] == closet_anime_ids[0]]['image_y'].tolist()[0]
     st.image(image_url, width=300)
     st.markdown(
         f"<p style='width: 300px; text-align: center; color: white; background-color: rgba(0, 0, 0, 0.5); padding: 5px;'>{closet_anime_name[0]}</p>",
