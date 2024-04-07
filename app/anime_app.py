@@ -1,19 +1,59 @@
 import streamlit as st
 import pandas as pd
-from langchain.embeddings import HuggingFaceEmbeddings
-from langchain_community.vectorstores import FAISS
 from utils.textpreprocessing import TextPreprocessor
+from utils.data_manipulation import (create_retriever, 
+                                         load_data, 
+                                         process_recommendations, 
+                                         get_top3_posters_and_names, 
+                                         get_recommendations_descriptions)
+textprepo = TextPreprocessor()
+from utils.prompt import (load_llm,
+                          format_docs,
+                          get_template)
 from utils.visualizations import streamlit_bar_plot, streamlit_box_whiskers, streamlit_umap
-import google.generativeai as genai
+from langchain_core.output_parsers import StrOutputParser
+from langchain_core.runnables import RunnablePassthrough
 
+sbert = "sentence-transformers/all-MiniLM-L6-v2"
+vdb = "/Users/justinvhuang/Desktop/CSE-6242-Group-Project/app/faiss_anime_index_v3"
+json_file_path = "/Users/justinvhuang/Desktop/CSE-6242-Group-Project/app/fin_anime_dfv2.json"
+cf_pickle_path = "/Users/justinvhuang/Desktop/CSE-6242-Group-Project/app/anime_recommendations_item_knn_CF_10k_num_fin.pkl"
+pop_pickle_path = "/Users/justinvhuang/Desktop/CSE-6242-Group-Project/app/popular_dict_10.pkl"
+llm_model = "/Users/justinvhuang/Desktop/CSE-6242-Group-Project/app/config.yaml"
 
-import yaml
+db_faiss = create_retriever(vdb, sbert)
+df, cf_recs, pop_recs = load_data(json_file_path, cf_pickle_path, pop_pickle_path)
+llm = load_llm(llm_model)
+custom_rag_prompt = get_template()
 
-# Load API key from config.yaml
-with open("config.yaml", "r") as file:
-    config = yaml.safe_load(file)
+def filter_tokens(metadata: dict) -> bool:
+    """
+    Filter function to apply on retrieved documents based on metadata.
 
-api_key = config["api_key"]
+    Args:
+        metadata (dict): Metadata of the document.
+        query_token (list): List of tokens to filter.
+
+    Returns:
+        bool: True if the document passes the filter, False otherwise.
+    """
+    metadata_tokens = metadata.get("tokens", [])
+    metadata_studio = metadata.get("studio", [])
+    metadata_producer = metadata.get("producer", [])
+    metadata_licensors = metadata.get("licensors", [])
+    metadata_genre = metadata.get("genre", [])
+
+    return (
+        any(token in metadata_tokens for token in query_token)
+        or metadata.get("score", 0.0) > 5.0
+        or any(token in metadata_studio for token in query_token)
+        or any(token in metadata_producer for token in query_token)
+        or any(token in metadata_licensors for token in query_token)
+        or any(token in metadata_genre for token in query_token)
+    )
+
+retriever = db_faiss.as_retriever(search_kwargs={"k": 50, "filter": filter_tokens})
+
 
 # Set page title and layout
 st.set_page_config(page_title='CSE 6242: Casual Correlations- GenAI Anime Recommendations', layout='wide')
@@ -45,23 +85,23 @@ st.markdown("""
 # Title in the golden banner
 st.markdown('<header>CSE 6242: Casual Correlations- GenAI Anime Recommendations</header>', unsafe_allow_html=True)
 
-userdata = {"GOOGLE_API_KEY": api_key}
-GOOGLE_API_KEY=userdata.get('GOOGLE_API_KEY')
-genai.configure(api_key=GOOGLE_API_KEY)
-model = genai.GenerativeModel(model_name='gemini-1.0-pro')
-chat = model.start_chat(enable_automatic_function_calling=True)
 
-textprepo = TextPreprocessor()
-encode_kwargs = {"normalize_embeddings": True}
-embedding_function = HuggingFaceEmbeddings(
-    model_name='sentence-transformers/all-MiniLM-L6-v2',
-    model_kwargs={"device": "cpu"},
-    encode_kwargs=encode_kwargs,
+rag_chain = (
+    {"context": retriever | format_docs, "question": RunnablePassthrough()}
+    | custom_rag_prompt
+    | llm
+    | StrOutputParser()
 )
 
-#Load in data
-new_db = FAISS.load_local("/Users/justinvhuang/Desktop/CSE-6242-Group-Project/vector_database_creation/faiss_anime_index_v3", embedding_function)
-df = pd.read_json("/Users/justinvhuang/Desktop/CSE-6242-Group-Project/app/fin_anime_dfv2.json")
+
+#BlockedPromptException
+#StopCandidateException
+#recommend popular recommendations 
+query = 'what are some good space pirate anime'
+query_token = textprepo.preprocess_text(query)
+print(rag_chain.invoke(query))
+
+results = retriever.get_relevant_documents(query)
 
 # Create sidebar
 with st.sidebar:
@@ -69,28 +109,18 @@ with st.sidebar:
     initial_query = "I like anime a lot!"
     query = st.text_area("Enter your Query here!", value=initial_query, max_chars = 200)
     query_token = textprepo.preprocess_text(query)
-    def filter_tokens(metadata):
-        metadata_tokens = metadata.get("tokens", [])
-        return any(token in metadata_tokens for token in query_token) and metadata["score"] > 6.0
-    results = new_db.similarity_search(query, filter= filter_tokens, k = 30)
-    indexes = {x.metadata['name']: index for index, x in enumerate(results)}
-    cf_list = list(df[df['Name'].isin(list(indexes.keys()))]['cf_recs'])
-    if cf_list is not None:
-        joined_list = [item for sublist in cf_list if sublist is not None for item in sublist if item is not None]
-
-    pop_recs = list(df.head(1)['popular_recs'])[0]
-    vd_recs = list(indexes.keys())
-
-    recs = df[df['anime_id'].isin(joined_list + pop_recs + vd_recs)]
-    recs2 = df[df['anime_id'].isin(joined_list +  vd_recs)]
-    descriptions = recs['anime_Synopsis'].tolist()
-    response = chat.send_message(f'You are a recommendation AI look at the following animes and summarize it into 5 sentences on why the user might like it: \n {descriptions}')
+    results = retriever.get_relevant_documents(query)
+    indexes = {x.metadata['anime_id']: index for index, x in enumerate(results)}
+    popular_anime_descriptions, joined_list, vd_recs = process_recommendations(pop_recs, df, indexes, cf_recs)
+    top3_posters, top3_names = get_top3_posters_and_names(df, indexes)
+    recs, recs2, descriptions = get_recommendations_descriptions(df, joined_list, pop_recs, vd_recs)
+    response= rag_chain.invoke(query)
     if st.button("Send"):
         st.write(f"You: {query}")
-        st.write(f"AI: Here are your recommendations: {response.text}")
+        st.write(f"AI: Here are your recommendations: \n \n {response}")
 
 
-top_anime_rating = recs2[recs2['anime_Score']!='UNKNOWN'].sort_values(by='anime_Score', ascending=False).head(5)
+top_anime_rating = recs2[recs2['anime_Score']!='UNKNOWN'].sort_values(by='anime_Score', ascending=False).head(10)
 top_studios = recs2.sort_values(by='Favorites', ascending=False).head(5)
 top_anime_rating['anime_Score'] = top_anime_rating['anime_Score'].astype(float)
 
@@ -117,7 +147,7 @@ col1, col2, col3, col4 = st.columns([1, 1, 1, 2])
 
 with col1:
     st.write("<div style='margin-top: 10px;'> </div>", unsafe_allow_html=True)
-    image_url = df[df["anime_id"] == closet_anime_ids[0]]['image_y'].tolist()[0]
+    image_url = df[df['anime_id'] == closet_anime_ids[0]]['image_y'].tolist()[0]
     st.image(image_url, width=300)
     st.markdown(
         f"<p style='width: 300px; text-align: center; color: white; background-color: rgba(0, 0, 0, 0.5); padding: 5px;'>{closet_anime_name[0]}</p>",
@@ -126,7 +156,7 @@ with col1:
 
 with col2:
     st.write("<div style='margin-top: 10px;'> </div>", unsafe_allow_html=True)
-    image_url = "https://upload.wikimedia.org/wikipedia/en/7/71/Kyoshiro_to_Towa_no_Sora_volume_1_cover.jpg"
+    image_url = df[df['anime_id'] == closet_anime_ids[1]]['image_y'].tolist()[0]
     st.image(image_url, width=300)
     st.markdown(
         f"<p style='width: 300px; text-align: center; color: white; background-color: rgba(0, 0, 0, 0.5); padding: 5px;'>{closet_anime_name[1]}</p>",
@@ -136,7 +166,7 @@ with col2:
 
 with col3:
     st.write("<div style='margin-top: 10px;'> </div>", unsafe_allow_html=True)
-    image_url = "https://cdn.myanimelist.net/images/anime/8/62593.jpg"
+    image_url = df[df['anime_id'] == closet_anime_ids[2]]['image_y'].tolist()[0]
     st.image(image_url, width=300)
     st.markdown(
         f"<p style='width: 300px; text-align: center; color: white; background-color: rgba(0, 0, 0, 0.5); padding: 5px;'>{closet_anime_name[2]}</p>",

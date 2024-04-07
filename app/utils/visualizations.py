@@ -17,7 +17,7 @@ def streamlit_bar_plot(df: pd.DataFrame) -> go.Figure:
     - fig (go.Figure): Plotly bar plot.
     """
     # Reset bar plot to default state
-    fig = px.bar(df.sort_values(by="anime_Score", ascending=True), x='anime_Score', y='Name', title="Ratings of Popular Anime", orientation='h')
+    fig = px.bar(df.sort_values(by="anime_Score", ascending=True), x='anime_Score', y='Name', title="Ratings of Popular Anime from Collabroative Filtering and Dense Vector Cosine Similarity", orientation='h')
     
     # Determine buffer region size
     buffer_region = 0.1 * (df["anime_Score"].max() - df["anime_Score"].min())
@@ -39,7 +39,7 @@ def streamlit_box_whiskers(df: pd.DataFrame) -> go.Figure:
     """
     # Create vertical box plot for the filtered data
     fig_box = px.box(df, x='Studios', y='Favorites', color='Studios', 
-                     title="Favorites to Studios Distribution", orientation='v', custom_data=['Name'])
+                     title="Favorites to Studios Distribution from Collabroative Filtering and Dense Vector Cosine Similarity", orientation='v', custom_data=['Name'])
 
     # Add text labels for maximum values
     fig_box.update_traces(
