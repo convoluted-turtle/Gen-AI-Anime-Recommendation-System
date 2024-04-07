@@ -4,7 +4,7 @@ from langchain_community.vectorstores import FAISS
 from typing import List, Tuple
 import pickle 
 
-def create_retriever(faiss_db: str):
+def create_retriever(faiss_db: str, transformer_path: str):
     """
     Creates a retriever using a FAISS index.
 
@@ -18,7 +18,7 @@ def create_retriever(faiss_db: str):
     
     # Initialize Hugging Face embeddings
     embedding_function = HuggingFaceEmbeddings(
-        model_name='sentence-transformers/all-MiniLM-L6-v2',
+        model_name=transformer_path,
         model_kwargs={"device": "cpu"},
         encode_kwargs=encode_kwargs,
     )
@@ -26,35 +26,10 @@ def create_retriever(faiss_db: str):
     # Load FAISS index
     db_faiss = FAISS.load_local(faiss_db, embeddings=embedding_function)
 
-    def filter_tokens(metadata: dict) -> bool:
-        """
-        Filter function to apply on retrieved documents based on metadata.
-
-        Args:
-            metadata (dict): Metadata of the document.
-            query_token (list): List of tokens to filter.
-
-        Returns:
-            bool: True if the document passes the filter, False otherwise.
-        """
-        metadata_tokens = metadata.get("tokens", [])
-        metadata_studio = metadata.get("studio", [])
-        metadata_producer = metadata.get("producer", [])
-        metadata_licensors = metadata.get("licensors", [])
-        metadata_genre = metadata.get("genre", [])
-
-        return (
-            any(token in metadata_tokens for token in query_token)
-            or metadata.get("score", 0.0) > 5.0
-            or any(token in metadata_studio for token in query_token)
-            or any(token in metadata_producer for token in query_token)
-            or any(token in metadata_licensors for token in query_token)
-            or any(token in metadata_genre for token in query_token)
-        )
-
     # Create retriever object
-    retriever = db_faiss.as_retriever(search_kwargs={"k": 50, "filter": filter_tokens})
-    return retriever
+    #retriever = db_faiss.as_retriever(search_kwargs={"k": 50, "filter": filter_tokens})
+    return db_faiss
+
 
 def load_data(json_file_path: str, cf_pickle_path: str, pop_pickle_path: str) -> Tuple[pd.DataFrame, dict, dict]:
     """
@@ -78,7 +53,7 @@ def load_data(json_file_path: str, cf_pickle_path: str, pop_pickle_path: str) ->
     
     return df, cf_recs, pop_recs
 
-def process_recommendations(pop_recs: dict, df: pd.DataFrame, indexes: dict) -> Tuple[List[str], List[str], List[int]]:
+def process_recommendations(pop_recs: dict, df: pd.DataFrame, indexes: dict, cf_recs: dict) -> Tuple[List[str], List[str], List[int]]:
     """
     Process recommendations to obtain popular anime descriptions, collaborative filtering recommendations, and VD recommendations.
 
