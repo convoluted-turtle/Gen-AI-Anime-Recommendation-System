@@ -105,6 +105,17 @@ results = retriever.get_relevant_documents(query)
 
 with st.sidebar:
     st.markdown("## Chat with AI Anime Recommendation")
+    studios = st.text_input("Studios", "")
+    animescore = st.text_input("Anime Score", "8.0")
+    producer = st.text_input("Producer", "")
+    actors = st.text_input('Actors', "")
+    if not isinstance(studios, str):
+        st.warning("Please enter a valid string for Studios.")
+    if not isinstance(producer, str):
+        st.warning("Please enter a valid string for Producer.")
+    if not isinstance(actors, str):
+        st.warning("Please enter a valid string for Actors.")
+    
     try:
         initial_query = "I like anime a lot!"
         query = st.text_area("Enter your Query here!", value=initial_query, max_chars=200)
@@ -122,11 +133,7 @@ with st.sidebar:
         recs = df[df['anime_id'].isin(pop_recs+joined_list)]
         recs2 = df[df['anime_id'].isin(pop_recs+joined_list)]
     
-    studios = st.text_input("Studios", "")
-    animescore = st.text_input("Anime Score", "8.0")
-    producer = st.text_input("Producer", "")
-    actors = st.text_input('Actors', "")
-    
+   
     if st.button("Send"):
         st.write(f"You: {query}")
         st.write(f"AI: Here are your recommendations: \n \n {response}")
