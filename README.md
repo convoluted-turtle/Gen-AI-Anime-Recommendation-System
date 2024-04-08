@@ -17,19 +17,20 @@ If running locally
 
 To rebuild data image containers
 ```
-docker build -f Dokcerfile-data -t jonlin8188/cse6242-data:latest .
-docker push jonlin8188/cse6242-data:latest .
+docker build -f Dockerfile-data -t jonlin8188/cse6242-data:latest .
+docker run --rm -it jonlin8188/cse6242-data:latest sh
+docker push jonlin8188/cse6242-data:latest
 ```
 
 To run:
 ```
 docker build -t jonlin8188/cse6242:latest .
-docker run -p 8080:8080 --rm -it jonlin8188/cse6242:latest
+docker run -p 8080:8080 --rm -it --env GOOGLE_API_KEY=ABCDEFG jonlin8188/cse6242:latest 
 # Access at http://localhost:8080
 docker push jonlin8188/cse6242:latest
 ```
 
-docker build -f Dokcerfile-data -t jonlin8188/cse6242-data:latest .
+docker build -f Dockerfile-data -t jonlin8188/cse6242-data:latest .
 docker build -t jonlin8188/cse6242:latest .
-docker push jonlin8188/cse6242-data:latest .
+docker push jonlin8188/cse6242-data:latest
 docker push jonlin8188/cse6242:latest
