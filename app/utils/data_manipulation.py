@@ -78,7 +78,7 @@ def process_recommendations(pop_recs: dict, df: pd.DataFrame, indexes: dict, cf_
     
     vd_recs = list(set(list(indexes.keys())))
     
-    return popular_anime_descriptions, joined_list, vd_recs
+    return popular_list, popular_anime_descriptions, joined_list, vd_recs
 
 def get_top3_posters_and_names(df: pd.DataFrame, indexes: dict) -> Tuple[List[str], List[str]]:
     """

@@ -5,6 +5,8 @@ from sentence_transformers import SentenceTransformer
 from umap import UMAP
 from sklearn.neighbors import NearestNeighbors
 from typing import Tuple, List
+import numpy as np
+from scipy.spatial.distance import cdist
 
 def streamlit_bar_plot(df: pd.DataFrame) -> go.Figure:
     """
@@ -63,12 +65,19 @@ def streamlit_umap(recs_umap: pd.DataFrame) -> Tuple[go.Figure, List[str]]:
     # Load a pre-trained Sentence Transformer model
     model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
 
+  
     # Encode the anime synopsis using the Sentence Transformer model
-    embeddings = model.encode(recs_umap['anime_Synopsis'].tolist())
+    embeddings_synopsis = model.encode(recs_umap['anime_Synopsis'].tolist())
+    embedding_producers = model.encode(recs_umap['Producers'].tolist())
+    embedding_aired = model.encode(recs_umap['Aired'].tolist())
+    embedding_studios = model.encode(recs_umap['Studios'].tolist())
+    embedding_actors = model.encode(recs_umap['imdb_name_basics_primaryName'].tolist())
+    ratings_encoded = np.array(recs_umap['anime_Score']).reshape(-1, 1)
+    combined_features = np.concatenate([embeddings_synopsis,embedding_producers,embedding_aired,embedding_studios,embedding_actors,ratings_encoded], axis = 1)
 
-    # Apply UMAP for dimensionality reduction
-    umap_model = UMAP(n_components=2, n_neighbors=5, min_dist=0.05,  metric= 'cosine')
-    umap_result = umap_model.fit_transform(embeddings)
+   # Apply UMAP for dimensionality reduction
+    umap_model = UMAP(n_components=2, n_neighbors=5, min_dist=0.05,  metric= 'euclidean',random_state=0)
+    umap_result = umap_model.fit_transform(combined_features)
 
     # Convert UMAP result to DataFrame
     umap_df = pd.DataFrame(umap_result, columns=['UMAP_1', 'UMAP_2'])
@@ -81,47 +90,37 @@ def streamlit_umap(recs_umap: pd.DataFrame) -> Tuple[go.Figure, List[str]]:
 
     # Plot the UMAP with color by 'rec_label'
     fig_umap = px.scatter(umap_df, x='UMAP_1', y='UMAP_2', color='rec_label', 
-                          hover_data={'Studios': True, 'Name': True},
-                          title='UMAP of Anime Recommendations from Collab Filter, Vector Database and Popular Recommendations')
+                            hover_data={'Studios': True, 'Name': True},
+                            title='UMAP of Anime Recommendations from Collab Filter, Vector Database and Popular Recommendations')
 
     # Modify the marker symbol for points labeled 'pop_rec' to be a star with yellow color and bigger size
-    fig_umap.for_each_trace(lambda t: t.update(marker=dict(symbol='star', size=12, color='yellow') if t.name == 'pop_rec' else {}))
+    fig_umap.for_each_trace(lambda t: t.update(marker=dict(symbol='star', size=12, color='blue')) if t.name == 'pop_rec' else None)
 
     # Add annotation for a specific point
     x_coord = umap_df.loc[0, 'UMAP_1']
     y_coord = umap_df.loc[0, 'UMAP_2']
     fig_umap.add_annotation(x=x_coord, y=y_coord, text="X", showarrow=True, font=dict(color="purple", size=20))
+    # Calculate pairwise distances between row 0 and all other rows
+    distances = cdist(umap_df[['UMAP_1', 'UMAP_2']].iloc[[0]], umap_df[['UMAP_1', 'UMAP_2']], metric='euclidean')[0]
+    # Sort distances and get the indices of the three closest rows (excluding row 0 itself)
+    closest_indices = np.argsort(distances)[1:4]
 
-    # Find the three closest points to the marked point
-    nn_model = NearestNeighbors(n_neighbors=4, metric='euclidean')
-    nn_model.fit(umap_result)
-    distances, indices = nn_model.kneighbors([umap_result[0]])
+    # Extract the closest rows based on the indices
+    closest_rows = umap_df.iloc[closest_indices]
+    closest_anime_names = closest_rows['Name'].tolist()
+    closest_anime_ids = closest_rows['anime_id'].tolist()
 
-    # Collect anime Name of the three closest points
-    closest_anime_names = umap_df.loc[indices[0][1:], 'Name'].tolist()
+    for i, (index, row) in enumerate(closest_rows.iterrows(), start=1):
+        x_coord = row['UMAP_1']
+        y_coord = row['UMAP_2']
+        fig_umap.add_trace(go.Scatter(x=[x_coord], y=[y_coord], mode='markers', marker=dict(symbol='x', size=10, color='red'), name=f'rec {i}'))
 
-     # Collect anime IDs of the three closest points
-    closest_anime_ids = umap_df.loc[indices[0][1:], 'anime_id'].tolist()
 
-    # Update hover template to include only 'Name' and 'Studios'
-    fig_umap.update_traces(customdata=umap_df[['Studios', 'Name']],
-                            hovertemplate="<b>%{customdata[1]}</b><br>" +
-                                          "Studios: %{customdata[0]}<br>" +
-                                          "<extra></extra>")
-
-    # Plot red X symbol on the closest points (excluding the marked point)
-    for i, idx in enumerate(indices[0][1:], start=1):
-        target_x = umap_df.loc[idx, 'UMAP_1']
-        target_y = umap_df.loc[idx, 'UMAP_2']
-        fig_umap.add_trace(go.Scatter(x=[target_x], y=[target_y], mode='markers', showlegend=True,
-                                      marker=dict(symbol='x', size=10, color='red'), name=f'rec {i}'))
-
-    
     # Remove x-axis and y-axis labels
     fig_umap.update_layout(xaxis=dict(title_text=''), yaxis=dict(title_text=''))
     # Remove x-axis and y-axis labels, ticks, and gridlines
     fig_umap.update_layout(xaxis=dict(showticklabels=False, showgrid=False, zeroline=False),
-                           yaxis=dict(showticklabels=False, showgrid=False, zeroline=False))
+                            yaxis=dict(showticklabels=False, showgrid=False, zeroline=False))
     # Set light gray background with higher opacity
     fig_umap.update_layout(plot_bgcolor='rgba(220, 220, 220, 0.1)')
 

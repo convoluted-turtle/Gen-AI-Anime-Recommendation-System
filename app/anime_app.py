@@ -9,14 +9,17 @@ from utils.data_manipulation import (create_retriever,
 textprepo = TextPreprocessor()
 from utils.prompt import (load_llm,
                           format_docs,
-                          get_template)
+                          get_template,
+                          popular_recs)
 from utils.visualizations import streamlit_bar_plot, streamlit_box_whiskers, streamlit_umap
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
+from PIL import Image
+
 
 sbert = "sentence-transformers/all-MiniLM-L6-v2"
 vdb = "/Users/justinvhuang/Desktop/CSE-6242-Group-Project/app/faiss_anime_index_v3"
-json_file_path = "/Users/justinvhuang/Desktop/CSE-6242-Group-Project/app/fin_anime_dfv2.json"
+json_file_path = "/Users/justinvhuang/Desktop/CSE-6242-Group-Project/app/fin_anime_dfv3.json"
 cf_pickle_path = "/Users/justinvhuang/Desktop/CSE-6242-Group-Project/app/anime_recommendations_item_knn_CF_10k_num_fin.pkl"
 pop_pickle_path = "/Users/justinvhuang/Desktop/CSE-6242-Group-Project/app/popular_dict_10.pkl"
 llm_model = "/Users/justinvhuang/Desktop/CSE-6242-Group-Project/app/config.yaml"
@@ -94,27 +97,36 @@ rag_chain = (
 )
 
 
-#BlockedPromptException
-#StopCandidateException
-#recommend popular recommendations 
 query = 'what are some good space pirate anime'
 query_token = textprepo.preprocess_text(query)
 print(rag_chain.invoke(query))
 
 results = retriever.get_relevant_documents(query)
 
-# Create sidebar
 with st.sidebar:
     st.markdown("## Chat with AI Anime Recommendation")
-    initial_query = "I like anime a lot!"
-    query = st.text_area("Enter your Query here!", value=initial_query, max_chars = 200)
-    query_token = textprepo.preprocess_text(query)
-    results = retriever.get_relevant_documents(query)
-    indexes = {x.metadata['anime_id']: index for index, x in enumerate(results)}
-    popular_anime_descriptions, joined_list, vd_recs = process_recommendations(pop_recs, df, indexes, cf_recs)
-    top3_posters, top3_names = get_top3_posters_and_names(df, indexes)
-    recs, recs2, descriptions = get_recommendations_descriptions(df, joined_list, pop_recs, vd_recs)
-    response= rag_chain.invoke(query)
+    try:
+        initial_query = "I like anime a lot!"
+        query = st.text_area("Enter your Query here!", value=initial_query, max_chars=200)
+        query_token = textprepo.preprocess_text(query)
+        results = retriever.get_relevant_documents(query)
+        indexes = {x.metadata['anime_id']: index for index, x in enumerate(results)}
+        pop_recs, popular_anime_descriptions, joined_list, vd_recs = process_recommendations(pop_recs, df, indexes, cf_recs)
+        top3_posters, closet_anime_name = get_top3_posters_and_names(df, indexes)
+        recs, recs2, descriptions = get_recommendations_descriptions(df, joined_list, pop_recs, vd_recs)
+        response = rag_chain.invoke(query)
+    except Exception as e:
+        response = popular_recs()
+        cf_list = list(df[df['anime_id'].isin(pop_recs)]['anime_values'])
+        joined_list = [item for sublist in cf_list for item in sublist]
+        recs = df[df['anime_id'].isin(pop_recs+joined_list)]
+        recs2 = df[df['anime_id'].isin(pop_recs+joined_list)]
+    
+    studios = st.text_input("Studios", "")
+    animescore = st.text_input("Anime Score", "8.0")
+    producer = st.text_input("Producer", "")
+    actors = st.text_input('Actors', "")
+    
     if st.button("Send"):
         st.write(f"You: {query}")
         st.write(f"AI: Here are your recommendations: \n \n {response}")
@@ -124,13 +136,14 @@ top_anime_rating = recs2[recs2['anime_Score']!='UNKNOWN'].sort_values(by='anime_
 top_studios = recs2.sort_values(by='Favorites', ascending=False).head(5)
 top_anime_rating['anime_Score'] = top_anime_rating['anime_Score'].astype(float)
 
-recs_umap = recs[['Studios', 'anime_Synopsis', 'Name', 'anime_id']]
+recs_umap = recs[['Studios', 'anime_Synopsis', 'Name', 'anime_id','Image URL', 'Producers', 'anime_Score', 'Source', 'Favorites', 'Members', 'Aired', 'imdb_name_basics_primaryName']]
+# Initialize 'rec_label' column with empty strings
 recs_umap['rec_label'] = ''
 
 # Iterate through the lists and update the 'rec_label' column
 for rec_type, lst in [('collab_filter', joined_list), ('vector_rec', vd_recs), ('pop_rec', pop_recs)]:
     recs_umap.loc[recs_umap['anime_id'].isin(lst), 'rec_label'] = rec_type
-new_row = {'Studios': 'user query', 'anime_Synopsis': query, 'Name': 'user query', 'anime_id': 'none', 'rec_label': 'none'}
+new_row = {'Studios': studios, 'anime_Synopsis': query, 'Name': '', 'anime_id': '', 'rec_label': 'none', 'Image URL': 'none', 'Producers': producer, 'anime_Score': animescore, 'Source': '', 'Favorites':'', 'Members':'', ' Aired':'', 'imdb_name_basics_primaryName': actors}
 recs_umap = pd.concat([pd.DataFrame(new_row, index=[0]), recs_umap], ignore_index=True)
 
 fig_bar = streamlit_bar_plot(top_anime_rating)
@@ -141,14 +154,16 @@ fig_umap, closet_anime_name, closet_anime_ids = streamlit_umap(recs_umap)
 
 
 # Side title for all three images
-st.markdown("<h5 style='text-align: left; margin-top: 30px;'>Anime Recommendations</h5>", unsafe_allow_html=True)
+st.markdown("<h5 style='text-align: left; margin-top: 30px;'>Anime Recommendations according UMAP</h5>", unsafe_allow_html=True)
 # Main content layout
 col1, col2, col3, col4 = st.columns([1, 1, 1, 2])
 
 with col1:
     st.write("<div style='margin-top: 10px;'> </div>", unsafe_allow_html=True)
-    image_url = df[df['anime_id'] == closet_anime_ids[0]]['image_y'].tolist()[0]
-    st.image(image_url, width=300)
+    #image_url = top3_posters[0]
+    image_url = df[df['anime_id'] == closet_anime_ids[0]]['Image URL'].tolist()[0]
+    st.markdown(f"<img src='{image_url}' width='300' height='400'>", unsafe_allow_html=True)
+
     st.markdown(
         f"<p style='width: 300px; text-align: center; color: white; background-color: rgba(0, 0, 0, 0.5); padding: 5px;'>{closet_anime_name[0]}</p>",
         unsafe_allow_html=True
@@ -156,23 +171,25 @@ with col1:
 
 with col2:
     st.write("<div style='margin-top: 10px;'> </div>", unsafe_allow_html=True)
-    image_url = df[df['anime_id'] == closet_anime_ids[1]]['image_y'].tolist()[0]
-    st.image(image_url, width=300)
+    #image_url = top3_posters[1]
+    image_url = df[df['anime_id'] == closet_anime_ids[1]]['Image URL'].tolist()[0]
+    st.markdown(f"<img src='{image_url}' width='300' height='400'>", unsafe_allow_html=True)
+
     st.markdown(
         f"<p style='width: 300px; text-align: center; color: white; background-color: rgba(0, 0, 0, 0.5); padding: 5px;'>{closet_anime_name[1]}</p>",
         unsafe_allow_html=True
     )
 
-
 with col3:
     st.write("<div style='margin-top: 10px;'> </div>", unsafe_allow_html=True)
-    image_url = df[df['anime_id'] == closet_anime_ids[2]]['image_y'].tolist()[0]
-    st.image(image_url, width=300)
+    #image_url = top3_posters[2]
+    image_url = df[df['anime_id'] == closet_anime_ids[2]]['Image URL'].tolist()[0]
+    st.markdown(f"<img src='{image_url}' width='300' height='400'>", unsafe_allow_html=True)
+
     st.markdown(
         f"<p style='width: 300px; text-align: center; color: white; background-color: rgba(0, 0, 0, 0.5); padding: 5px;'>{closet_anime_name[2]}</p>",
         unsafe_allow_html=True
     )
-
 
 with col4:
     st.plotly_chart(fig_bar, use_container_width=True)
