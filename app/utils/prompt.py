@@ -96,17 +96,17 @@ def get_template():
 def popular_recs():
 
     text = """
-    Hi sorry there seems to be something wrong with the query but here are popular recommendations for you to look at! 
+Hi sorry there seems to be something wrong with the query but here are popular recommendations for you to look at! 
 
-    1. Cowboy Bebop: Set in the year 2071, it follows the adventures of a group of bounty hunters traveling on their spaceship, the Bebop, as they try to catch dangerous criminals while dealing with their own troubled pasts.
+1. Cowboy Bebop: Set in the year 2071, it follows the adventures of a group of bounty hunters traveling on their spaceship, the Bebop, as they try to catch dangerous criminals while dealing with their own troubled pasts.
 
-    2. Escaflowne: A high school girl named Hitomi finds herself transported to the magical world of Gaea where she becomes involved in a war between the peaceful people of the planet and the Zaibach Empire, aided by the legendary mecha, Escaflowne.
+2. Escaflowne: A high school girl named Hitomi finds herself transported to the magical world of Gaea where she becomes involved in a war between the peaceful people of the planet and the Zaibach Empire, aided by the legendary mecha, Escaflowne.
 
-    3. GetBackers: Ban Mido and Ginji Amano run a unique freelance retrieval agency called "GetBackers," specializing in recovering anything lost or stolen. Their adventures lead them into various dangerous situations and confrontations with powerful enemies.
+3. GetBackers: Ban Mido and Ginji Amano run a unique freelance retrieval agency called "GetBackers," specializing in recovering anything lost or stolen. Their adventures lead them into various dangerous situations and confrontations with powerful enemies.
 
-    4. Hachimitsu to Clover: This anime revolves around the lives of several art students attending an art college in Tokyo as they navigate through love, friendship, and the pursuit of their dreams in both their personal and professional lives.
+4. Hachimitsu to Clover: This anime revolves around the lives of several art students attending an art college in Tokyo as they navigate through love, friendship, and the pursuit of their dreams in both their personal and professional lives.
 
-    5. Hajime no Ippo: The story follows Ippo Makunouchi, a timid high school student who becomes a professional boxer under the guidance of coach Kamogawa. Throughout his journey, Ippo faces numerous challenges in and out of the ring as he strives to become the strongest boxer in the world.
+5. Hajime no Ippo: The story follows Ippo Makunouchi, a timid high school student who becomes a professional boxer under the guidance of coach Kamogawa. Throughout his journey, Ippo faces numerous challenges in and out of the ring as he strives to become the strongest boxer in the world.
 
     Thanks for using the anime recommender from Casual Correlations!
         """

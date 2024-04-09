@@ -72,8 +72,9 @@ def streamlit_umap(recs_umap: pd.DataFrame) -> Tuple[go.Figure, List[str]]:
     embedding_aired = model.encode(recs_umap['Aired'].tolist())
     embedding_studios = model.encode(recs_umap['Studios'].tolist())
     embedding_actors = model.encode(recs_umap['imdb_name_basics_primaryName'].tolist())
+    embedding_genres = model.encode(recs_umap['Genres'].tolist())
     ratings_encoded = np.array(recs_umap['anime_Score']).reshape(-1, 1)
-    combined_features = np.concatenate([embeddings_synopsis,embedding_producers,embedding_aired,embedding_studios,embedding_actors,ratings_encoded], axis = 1)
+    combined_features = np.concatenate([embeddings_synopsis,embedding_producers,embedding_aired,embedding_studios,embedding_actors,ratings_encoded,embedding_genres], axis = 1)
 
    # Apply UMAP for dimensionality reduction
     umap_model = UMAP(n_components=2, n_neighbors=5, min_dist=0.05,  metric= 'euclidean',random_state=0)

@@ -124,12 +124,15 @@ with st.sidebar:
     animescore = st.text_input("Anime Score", "8.0")
     producer = st.text_input("Producer", "")
     actors = st.text_input('Actors', "")
+    genre = st.text_input('Genre', "")
     if not isinstance(studios, str):
         st.warning("Please enter a valid string for Studios.")
     if not isinstance(producer, str):
         st.warning("Please enter a valid string for Producer.")
     if not isinstance(actors, str):
         st.warning("Please enter a valid string for Actors.")
+    if not isinstance(genre, str):
+        st.warning("Please enter a valid string for Genre.")
     
     try:
         initial_query = "I like anime a lot!"
@@ -151,21 +154,21 @@ with st.sidebar:
    
     if st.button("Send"):
         st.write(f"You: {query}")
-        st.write(f"AI: Here are your recommendations: \n \n {response}")
+        st.sidebar.write(f"AI: Here are your recommendations: \n \n {response}")
 
 
 top_anime_rating = recs2[recs2['anime_Score']!='UNKNOWN'].sort_values(by='anime_Score', ascending=False).head(10)
 top_studios = recs2.sort_values(by='Favorites', ascending=False).head(5)
 top_anime_rating['anime_Score'] = top_anime_rating['anime_Score'].astype(float)
 
-recs_umap = recs[['Studios', 'anime_Synopsis', 'Name', 'anime_id','Image URL', 'Producers', 'anime_Score', 'Source', 'Favorites', 'Members', 'Aired', 'imdb_name_basics_primaryName']]
+recs_umap = recs[['Studios', 'anime_Synopsis', 'Name', 'anime_id','Image URL', 'Producers', 'anime_Score', 'Source', 'Favorites', 'Members', 'Aired', 'imdb_name_basics_primaryName', 'Genres']]
 # Initialize 'rec_label' column with empty strings
 recs_umap['rec_label'] = ''
 
 # Iterate through the lists and update the 'rec_label' column
 for rec_type, lst in [('collab_filter', joined_list), ('vector_rec', vd_recs), ('pop_rec', pop_recs)]:
     recs_umap.loc[recs_umap['anime_id'].isin(lst), 'rec_label'] = rec_type
-new_row = {'Studios': studios, 'anime_Synopsis': query, 'Name': '', 'anime_id': '', 'rec_label': 'none', 'Image URL': 'none', 'Producers': producer, 'anime_Score': animescore, 'Source': '', 'Favorites':'', 'Members':'', ' Aired':'', 'imdb_name_basics_primaryName': actors}
+new_row = {'Studios': studios, 'anime_Synopsis': query, 'Name': '', 'anime_id': '', 'rec_label': 'none', 'Image URL': 'none', 'Producers': producer, 'anime_Score': animescore, 'Source': '', 'Favorites':'', 'Members':'', ' Aired':'', 'imdb_name_basics_primaryName': actors, 'Genres': genre}
 recs_umap = pd.concat([pd.DataFrame(new_row, index=[0]), recs_umap], ignore_index=True)
 
 fig_bar = streamlit_bar_plot(top_anime_rating)
