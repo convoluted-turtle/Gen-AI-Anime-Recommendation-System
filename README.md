@@ -1,6 +1,8 @@
 # CSE-6242-Group-Project
 ## Gen-AI Anime Recommendation System
 
+### Intro
+
 ### Dependencies 
 
 | pypi library | version |
@@ -14,7 +16,7 @@
 | Cell 13  | Cell 14  |
 | Cell 15  | Cell 16  |
 
-### Intro
+
 
 ### Web Scrapining and Wikipedia API
 
