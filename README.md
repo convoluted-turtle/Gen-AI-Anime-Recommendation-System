@@ -89,6 +89,8 @@
 
 #### Prompt Template Creation
 
+![image](https://github.com/convoluted-turtle/CSE-6242-Group-Project/assets/33863191/a046c012-2bb7-46d5-951f-62e5c1dbba65)
+
 #### Prompting Evaluation
 
 ### Visualization Creation
