@@ -91,6 +91,8 @@
 
 ![image](https://github.com/convoluted-turtle/CSE-6242-Group-Project/assets/33863191/edfb1fa8-1288-4248-a59b-b91f60f5933a)
 
+![image](https://github.com/convoluted-turtle/CSE-6242-Group-Project/assets/33863191/e7da3451-d5b8-4ef0-81cc-27bf73d4c503)
+
 #### Docker Image
 
 To rebuild data image containers
