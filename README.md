@@ -65,6 +65,16 @@
 
 #### Collabroative Filtering Evaluation
 
+<div align="center">
+
+| Model                | RMSE  | F1-score | MAP   | NDCG@5 |
+|----------------------|-------|----------|-------|--------|
+| ItemKNN-Cosine       | 1.2106| 0.0153   | 0.0315| 0.0590 |
+| ItemKNN-Pearson      | 1.2147| 0.0153   | 0.0311| 0.0545 |
+| ItemKNN-Adjusted Cosine | 1.2135| 0.0153 | 0.0314| 0.0657 |
+
+</div>
+
 #### Thompson Sampling Popular Recommendation
 
 ### Vector DataBase Creation 
