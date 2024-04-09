@@ -3,7 +3,7 @@
 
 ### Intro
 
-<img src="https://github.com/convoluted-turtle/CSE-6242-Group-Project/assets/33863191/edfb1fa8-1288-4248-a59b-b91f60f5933a" alt="intro" width="300">
+<img src="https://github.com/convoluted-turtle/CSE-6242-Group-Project/assets/33863191/edfb1fa8-1288-4248-a59b-b91f60f5933a" alt="intro" width="700", height = "500">
 
 ---
 
