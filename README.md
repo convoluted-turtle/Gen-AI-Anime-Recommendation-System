@@ -69,7 +69,7 @@
 
 #### Item-KNN Collabroative Filtering
 
-<img src="https://github.com/convoluted-turtle/CSE-6242-Group-Project/assets/33863191/84fe2861-d853-4c19-84b8-228eaebaf56b" alt="item-knn" width="300">
+<img src="https://github.com/convoluted-turtle/CSE-6242-Group-Project/assets/33863191/84fe2861-d853-4c19-84b8-228eaebaf56b" alt="item-knn" width="600">
 
 
 #### Collabroative Filtering Evaluation
@@ -102,7 +102,8 @@
 
 #### Prompt Template Creation
 
-![image](https://github.com/convoluted-turtle/CSE-6242-Group-Project/assets/33863191/a046c012-2bb7-46d5-951f-62e5c1dbba65)
+<img src="https://github.com/convoluted-turtle/CSE-6242-Group-Project/assets/33863191/a046c012-2bb7-46d5-951f-62e5c1dbba65" alt="prompting" width="600">
+
 
 #### Prompting Evaluation
 
@@ -127,7 +128,7 @@
 
 #### Streamlit Application
 
-<img src="https://github.com/convoluted-turtle/CSE-6242-Group-Project/assets/33863191/e7da3451-d5b8-4ef0-81cc-27bf73d4c503" alt="Streamlit Application" width="300">
+<img src="https://github.com/convoluted-turtle/CSE-6242-Group-Project/assets/33863191/e7da3451-d5b8-4ef0-81cc-27bf73d4c503" alt="Streamlit Application" width="700">
 
 #### Docker Image
 
