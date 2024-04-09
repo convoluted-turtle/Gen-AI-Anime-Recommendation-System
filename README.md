@@ -5,6 +5,8 @@
 
 ![image](https://github.com/convoluted-turtle/CSE-6242-Group-Project/assets/33863191/edfb1fa8-1288-4248-a59b-b91f60f5933a)
 
+---
+
 ### Dependencies 
 
 <div align="center">
@@ -43,6 +45,8 @@
 
 </div>
 
+---
+
 ### Web Scrapining and Wikipedia API
 
 #### IMDB Actor Scraping
@@ -51,11 +55,15 @@
 
 #### Wikipedia Image API
 
+---
+
 ### Data Joining
 
 #### Joining IMDB
 
 #### Joining Wikipedia
+
+---
 
 ### Collobroative Filtering and Popularity
 
@@ -77,6 +85,8 @@
 
 #### Thompson Sampling Popular Recommendation
 
+---
+
 ### Vector DataBase Creation 
 
 #### Faiss Vector Database Creation
@@ -85,6 +95,8 @@
 
 #### Filter Creation
 
+---
+
 ### Prompting
 
 #### Prompt Template Creation
@@ -92,6 +104,8 @@
 ![image](https://github.com/convoluted-turtle/CSE-6242-Group-Project/assets/33863191/a046c012-2bb7-46d5-951f-62e5c1dbba65)
 
 #### Prompting Evaluation
+
+---
 
 ### Visualization Creation
 
@@ -105,6 +119,8 @@
 
 
 #### Box and Whiskers
+
+---
 
 ### Application Creation 
 
