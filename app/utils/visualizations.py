@@ -90,10 +90,11 @@ def streamlit_umap(recs_umap: pd.DataFrame) -> Tuple[go.Figure, List[str]]:
     umap_df['anime_id'] = recs_umap['anime_id'].tolist()
     umap_df['actors'] = recs_umap['imdb_name_basics_primaryName'].tolist()
     umap_df['producers'] = recs_umap['Producers'].tolist()
+    umap_df['genre'] = recs_umap['Genres'].tolist()
 
     # Plot the UMAP with color by 'rec_label'
     fig_umap = px.scatter(umap_df, x='UMAP_1', y='UMAP_2', color='rec_label', 
-                            hover_data={'Studios': True, 'Name': True, 'actors': True, 'producers': True},
+                            hover_data={'Studios': True, 'Name': True, 'actors': True, 'producers': True, 'genre':True},
                             title='UMAP of Anime Recommendations from Collab Filter, Vector Database and Popular Recommendations')
 
     # Modify the marker symbol for points labeled 'pop_rec' to be a star with yellow color and bigger size
