@@ -101,6 +101,9 @@
 
 #### UMAP
 
+![image](https://github.com/convoluted-turtle/CSE-6242-Group-Project/assets/33863191/4db9bea7-2dc4-458b-a09f-79cef207435f)
+
+
 #### Box and Whiskers
 
 ### Application Creation 
