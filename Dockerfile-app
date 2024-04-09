@@ -8,6 +8,7 @@
 
 FROM jonlin8188/cse6242-data:latest as data
 
+
 # Build the streamlit container
 FROM python:3.11-slim-bullseye
 ENV HOST=0.0.0.0 
@@ -15,10 +16,10 @@ ENV LISTEN_PORT 8080
 EXPOSE 8080
 RUN apt-get update && apt-get install -y git build-essential
 COPY ./app/requirements.txt /app/requirements.txt
-RUN pip3 install --no-cache-dir --upgrade -r /app/requirements.txt --default-timeout=1000 --no-cache-dir
+RUN pip3 install --no-cache-dir --upgrade -r /app/requirements.txt --default-timeout=1000
 WORKDIR /app
 
-# Datasets
+# Datasets`
 COPY --from=data /data/ /app/data
 COPY --from=data /model/ /app/model
 COPY --from=data /embedding/ /app/embedding
@@ -29,5 +30,7 @@ COPY --from=data /embedding/ /app/embedding
 # **/app/embedding
 # **/app/model
 COPY ./app /app
+
+ENV HF_HOME=/model/hfembedding/models--sentence-transformers--all-MiniLM-L6-v2/snapshots/e4ce9877abf3edfe10b0d82785e83bdcb973e22e
 
 CMD ["streamlit", "run", "anime_app.py", "--server.port", "8080"]

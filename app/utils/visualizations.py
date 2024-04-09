@@ -2,7 +2,7 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 from sentence_transformers import SentenceTransformer
-from umap import UMAP
+from umap import UMAP 
 from sklearn.neighbors import NearestNeighbors
 from typing import Tuple, List
 import numpy as np

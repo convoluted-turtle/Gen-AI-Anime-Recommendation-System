@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import os
 from utils.textpreprocessing import TextPreprocessor
 from utils.data_manipulation import (create_retriever, 
                                          load_data, 
@@ -15,18 +16,32 @@ from utils.visualizations import streamlit_bar_plot, streamlit_box_whiskers, str
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
 from PIL import Image
+import sys
+import yaml
 
+print("Python path:", sys.executable)
 
-sbert = "sentence-transformers/all-MiniLM-L6-v2"
-vdb = "/Users/justinvhuang/Desktop/CSE-6242-Group-Project/app/faiss_anime_index_v3"
-json_file_path = "/Users/justinvhuang/Desktop/CSE-6242-Group-Project/app/fin_anime_dfv3.json"
-cf_pickle_path = "/Users/justinvhuang/Desktop/CSE-6242-Group-Project/app/anime_recommendations_item_knn_CF_10k_num_fin.pkl"
-pop_pickle_path = "/Users/justinvhuang/Desktop/CSE-6242-Group-Project/app/popular_dict_10.pkl"
-llm_model = "/Users/justinvhuang/Desktop/CSE-6242-Group-Project/app/config.yaml"
+sbert = "sentence-transformers/all-MiniLM-L6-v2" 
+vdb = "embedding/faiss_anime_index_v3"
+json_file_path = "data/fin_anime_dfv3.json"
+cf_pickle_path = "data/anime_recommendations_item_knn_CF_10k_num_fin.pkl"
+pop_pickle_path = "data/popular_dict_10.pkl"
+
+if os.getenv("GOOGLE_API_KEY") is None:
+    llm_model = "streamlit/config.yaml" # Justin's key
+    with open(llm_model, "r") as file:
+        config = yaml.safe_load(file)
+
+    print(config)
+    api_key = config["api_key"]
+else:
+    print("Loading key")
+    print(os.getenv("GOOGLE_API_KEY"))
+    api_key = os.getenv("GOOGLE_API_KEY")
 
 db_faiss = create_retriever(vdb, sbert)
 df, cf_recs, pop_recs = load_data(json_file_path, cf_pickle_path, pop_pickle_path)
-llm = load_llm(llm_model)
+llm = load_llm(api_key)
 custom_rag_prompt = get_template()
 
 def filter_tokens(metadata: dict) -> bool:
