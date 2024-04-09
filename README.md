@@ -126,7 +126,7 @@
 
 #### Streamlit Application
 
-![image](https://github.com/convoluted-turtle/CSE-6242-Group-Project/assets/33863191/e7da3451-d5b8-4ef0-81cc-27bf73d4c503)
+<img src="https://github.com/convoluted-turtle/CSE-6242-Group-Project/assets/33863191/e7da3451-d5b8-4ef0-81cc-27bf73d4c503" alt="Streamlit Application" width="300">
 
 #### Docker Image
 
