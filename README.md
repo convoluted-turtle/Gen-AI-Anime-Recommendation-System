@@ -3,7 +3,7 @@
 
 ## Dependencies 
 
-| Column 1 | Column 2 |
+| pypi library | version |
 |----------|----------|
 | Cell 1   | Cell 2   |
 | Cell 3   | Cell 4   |
@@ -18,11 +18,11 @@
 
 ## Web Scrapining and Wikipedia API
 
-### IMDB Actor Scraping**
+### IMDB Actor Scraping
 
-### Wikipedia Plot API**
+### Wikipedia Plot API
 
-### Wikipedia Image API**
+### Wikipedia Image API
 
 ## Data Joining
 
