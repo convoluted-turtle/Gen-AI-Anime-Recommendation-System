@@ -18,13 +18,16 @@ def create_retriever(faiss_db: str, transformer_path: str):
     
     # Initialize Hugging Face embeddings
     embedding_function = HuggingFaceEmbeddings(
+        cache_folder='model/hfembedding/',
         model_name=transformer_path,
         model_kwargs={"device": "cpu"},
         encode_kwargs=encode_kwargs,
     )
 
     # Load FAISS index
-    db_faiss = FAISS.load_local(faiss_db, embeddings=embedding_function)
+    db_faiss = FAISS.load_local(faiss_db,
+                                embeddings=embedding_function,
+                                allow_dangerous_deserialization=True)
 
     # Create retriever object
     #retriever = db_faiss.as_retriever(search_kwargs={"k": 50, "filter": filter_tokens})

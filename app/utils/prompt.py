@@ -1,15 +1,8 @@
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.prompts import PromptTemplate
-import yaml
+import google.generativeai as genai
 
-def load_llm(llm_model):
-    # Load API key from config.yaml
-    with open(llm_model, "r") as file:
-        config = yaml.safe_load(file)
-
-    api_key = config["api_key"]
-
-    import google.generativeai as genai
+def load_llm(api_key):
     userdata = {"GOOGLE_API_KEY": api_key}
     GOOGLE_API_KEY=userdata.get('GOOGLE_API_KEY')
     genai.configure(api_key=GOOGLE_API_KEY)
