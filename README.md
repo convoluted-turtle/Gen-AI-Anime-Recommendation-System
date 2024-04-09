@@ -69,7 +69,7 @@
 
 #### Item-KNN Collabroative Filtering
 
-<img src="https://github.com/convoluted-turtle/CSE-6242-Group-Project/assets/33863191/84fe2861-d853-4c19-84b8-228eaebaf56b" alt="item-knn" width="600">
+<img src="https://github.com/convoluted-turtle/CSE-6242-Group-Project/assets/33863191/84fe2861-d853-4c19-84b8-228eaebaf56b" alt="item-knn" width="450">
 
 
 #### Collabroative Filtering Evaluation
