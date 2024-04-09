@@ -7,16 +7,35 @@
 
 | pypi library | version |
 |----------|----------|
-| Cell 1   | Cell 2   |
-| Cell 3   | Cell 4   |
-| Cell 5   | Cell 6   |
-| Cell 7   | Cell 8   |
-| Cell 9   | Cell 10  |
-| Cell 11  | Cell 12  |
-| Cell 13  | Cell 14  |
-| Cell 15  | Cell 16  |
-
-
+| accelerate  | 0.26.1   |
+| bitsandbytes  | 0.41.2.post2  |
+| faiss-cpu  | 1.8.0  |
+| hdbscan   | 0.8.33   |
+| IProgress  | 8.1.2  |
+| ipywidgets | 0.4 |
+| langchain | 0.1.1  |
+| langchain-community | 0.0.20 |
+| langchain-core  | 0.1.23  |
+| langchain-text-splitters | 0.0.1 |
+| langcodes  | 3.3.0  |
+| langsmith | 0.0.87  |
+| llama_cpp_python | 0.2.26  |
+| numba | 0.59.0  |
+| numpy | 1.26.4 |
+| pandas | 2.2.1 |
+| peft | 0.7.1 |
+| plotly | 5.20.0 |
+| sentence-transformers | 2.5.1 |
+| spacy | 3.7.4 |
+| streamlit | 1.32.2  |
+| tokenizers| 0.15.2  |
+| transformers | 4.37.2  |
+| umap-learn| 0.5.5 |
+| google-ai-generativelanguage  | 2.18.0 |
+| google-api-core  | 2.18.0 |
+| google-auth | 2.28.2 |
+| google-generativeai  |  0.4.1 |
+| googleapis-common-protos  | 1.63.0 |
 
 ### Web Scrapining and Wikipedia API
 
