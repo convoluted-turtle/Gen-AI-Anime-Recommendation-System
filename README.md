@@ -3,7 +3,7 @@
 
 ### Intro
 
-![image](https://github.com/convoluted-turtle/CSE-6242-Group-Project/assets/33863191/edfb1fa8-1288-4248-a59b-b91f60f5933a)
+<img src="https://github.com/convoluted-turtle/CSE-6242-Group-Project/assets/33863191/edfb1fa8-1288-4248-a59b-b91f60f5933a" alt="intro" width="300">
 
 ---
 
@@ -69,7 +69,8 @@
 
 #### Item-KNN Collabroative Filtering
 
-![image](https://github.com/convoluted-turtle/CSE-6242-Group-Project/assets/33863191/84fe2861-d853-4c19-84b8-228eaebaf56b)
+<img src="https://github.com/convoluted-turtle/CSE-6242-Group-Project/assets/33863191/84fe2861-d853-4c19-84b8-228eaebaf56b" alt="item-knn" width="300">
+
 
 #### Collabroative Filtering Evaluation
 
