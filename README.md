@@ -2,13 +2,13 @@
 ## Gen-AI Anime Recommendation System
 
 ### Intro
-<div align="center">
+
 ![image](https://github.com/convoluted-turtle/CSE-6242-Group-Project/assets/33863191/edfb1fa8-1288-4248-a59b-b91f60f5933a)
-</div>
 
 ### Dependencies 
 
 <div align="center">
+
 | pypi library | version |
 |----------|----------|
 | accelerate  | 0.26.1   |
@@ -40,6 +40,7 @@
 | google-auth | 2.28.2 |
 | google-generativeai  |  0.4.1 |
 | googleapis-common-protos  | 1.63.0 |
+
 </div>
 
 ### Web Scrapining and Wikipedia API
@@ -59,9 +60,8 @@
 ### Collobroative Filtering and Popularity
 
 #### Item-KNN Collabroative Filtering
-<div align="center">
+
 ![image](https://github.com/convoluted-turtle/CSE-6242-Group-Project/assets/33863191/84fe2861-d853-4c19-84b8-228eaebaf56b)
-</div>
 
 #### Collabroative Filtering Evaluation
 
@@ -70,9 +70,8 @@
 ### Vector DataBase Creation 
 
 #### Faiss Vector Database Creation
-<div align="center">
+
 ![image](https://github.com/convoluted-turtle/CSE-6242-Group-Project/assets/33863191/e92ba2d0-673f-4b07-b424-1670a6655ff8)
-</div>
 
 #### Filter Creation
 
@@ -95,9 +94,8 @@
 ### Application Creation 
 
 #### Streamlit Application
-<div align="center">
+
 ![image](https://github.com/convoluted-turtle/CSE-6242-Group-Project/assets/33863191/e7da3451-d5b8-4ef0-81cc-27bf73d4c503)
-</div>
 
 #### Docker Image
 
