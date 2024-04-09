@@ -1,7 +1,7 @@
 # CSE-6242-Group-Project
-# Gen-AI Anime Recommendation System
+## Gen-AI Anime Recommendation System
 
-## Dependencies 
+### Dependencies 
 
 | pypi library | version |
 |----------|----------|
@@ -14,63 +14,63 @@
 | Cell 13  | Cell 14  |
 | Cell 15  | Cell 16  |
 
-## Intro
+### Intro
 
-## Web Scrapining and Wikipedia API
+### Web Scrapining and Wikipedia API
 
-### IMDB Actor Scraping
+#### IMDB Actor Scraping
 
-### Wikipedia Plot API
+#### Wikipedia Plot API
 
-### Wikipedia Image API
+#### Wikipedia Image API
 
-## Data Joining
+### Data Joining
 
-### Joining IMDB**
+#### Joining IMDB
 
-### Joining Wikipedia**
+#### Joining Wikipedia
 
-## Collobroative Filtering and Popularity
+### Collobroative Filtering and Popularity
 
-### Item-KNN Collabroative Filtering
+#### Item-KNN Collabroative Filtering
 
 ![image](https://github.com/convoluted-turtle/CSE-6242-Group-Project/assets/33863191/84fe2861-d853-4c19-84b8-228eaebaf56b)
 
-### Collabroative Filtering Evaluation
+#### Collabroative Filtering Evaluation
 
-### Thompson Sampling Popular Recommendation
+#### Thompson Sampling Popular Recommendation
 
-## Vector DataBase Creation 
+### Vector DataBase Creation 
 
-### Faiss Vector Database Creation
+#### Faiss Vector Database Creation
 
 ![image](https://github.com/convoluted-turtle/CSE-6242-Group-Project/assets/33863191/e92ba2d0-673f-4b07-b424-1670a6655ff8)
 
-### Filter Creation
+#### Filter Creation
 
-## Prompting
+### Prompting
 
-### Prompt Template Creation
+#### Prompt Template Creation
 
-### Prompting Evaluation
+#### Prompting Evaluation
 
-## Visualization Creation
+### Visualization Creation
 
-### Poster Display
+#### Poster Display
 
-### Bar Chart
+#### Bar Chart
 
-### UMAP
+#### UMAP
 
-### Box and Whiskers
+#### Box and Whiskers
 
-## Application Creation 
+### Application Creation 
 
-### Streamlit Application
+#### Streamlit Application
 
 ![image](https://github.com/convoluted-turtle/CSE-6242-Group-Project/assets/33863191/edfb1fa8-1288-4248-a59b-b91f60f5933a)
 
-### Docker Image
+#### Docker Image
 
 To rebuild data image containers
 ```
