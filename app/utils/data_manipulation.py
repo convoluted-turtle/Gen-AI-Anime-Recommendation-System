@@ -18,7 +18,7 @@ def create_retriever(faiss_db: str, transformer_path: str):
     
     # Initialize Hugging Face embeddings
     embedding_function = HuggingFaceEmbeddings(
-        cache_folder='model/hfembedding/',
+        # cache_folder='model/hfembedding/',
         model_name=transformer_path,
         model_kwargs={"device": "cpu"},
         encode_kwargs=encode_kwargs,
