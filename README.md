@@ -8,6 +8,16 @@
 
 Our solution addresses the challenges faced by modern anime recommendation systems by introducing a hybrid approach enriched with visualizations. By integrating data from IMDB, Wikipedia, and MyAnimeList (MAL), we ensure comprehensive information on series and titles. We tackle cold start scenarios and long-tail issues by employing Item-KNN with a Jaccard similarity filter, guaranteeing diverse and relevant recommendations. Through UMAP visualization, users gain deeper insights into the anime landscape, while industry leaders and researchers benefit from a comprehensive view of consumer sentiment and trends. This approach not only enhances content discovery for fans but also provides a trusted source of truth in the anime community.
 
+TLDR Steps:
+
+1. We started by scraping anime datasets from IMDb and Wikipedia, combining them with the MyAnimeList dataset from Kaggle for comprehensive information.
+2. Utilizing item-KNN collaborative filtering and pre-computed Thompson sampling for popular recommendations, we enhanced our recommendation algorithms.
+3. A vector database was constructed using data from Kaggle, IMDb, and Wikipedia, with the text columns from Wikipedia and MyAnimeList serving as embeddings.
+4. We crafted prompts to ground Gemini-Pro, imbuing it with extended knowledge derived from our comprehensive vector database.
+5. Visualizations, including UMAP, were developed to showcase recommendations from the vector database, collaborative filtering, and popular suggestions, providing users with a holistic view.
+6. We built a Streamlit application featuring various visualizations, with a chat option available for user interaction. Visualizations were predominantly focused on studio analysis in response to different user queries.
+7. Lastly, the application was dockerized for seamless deployment and scalability.
+
 ---
 
 ### Dependencies 
@@ -165,7 +175,7 @@ LLM used Gemini Pro: https://gemini.google.com
 #### Prompting Evaluation
 
 
-In our evaluation process, we utilized Rouge scores, a set of metrics commonly employed in natural language processing tasks to assess the quality of generated text against reference summaries or ground truth. Rouge-1 measures the overlap of unigram (single word) sequences between the generated text and the reference summary. Rouge-2 extends this to measure the overlap of bigram (two-word) sequences. Rouge-L computes the longest common subsequence between the generated text and the reference summary, considering the length of the longest common subsequence. Rouge-Lsum evaluates the average Rouge-L score across multiple reference summaries. Additionally, we employed a Chain of Thought approach using Langsmith to trace back the generation steps of our chat model, Gemini-Pro. This method enables a meticulous analysis of each response, ensuring logical coherence and alignment with the initial question. This offline evaluation, conducted with a ground-truth dataset curated by our team, provides valuable insights into the effectiveness and accuracy of our recommendation system's responses.
+In our evaluation process, we utilized Rouge scores, a set of metrics commonly employed in natural language processing tasks to assess the quality of generated text against reference summaries or ground truth. Rouge-1 measures the overlap of unigram (single word) sequences between the generated text and the reference summary. Rouge-2 extends this to measure the overlap of bigram (two-word) sequences. Rouge-L computes the longest common subsequence between the generated text and the reference summary, considering the length of the longest common subsequence. Rouge-Lsum evaluates the average Rouge-L score across multiple reference summaries. 
 
 * **Rouge**
 
@@ -179,6 +189,8 @@ Rouge Notebook: [here](prompting/prompting-eval.ipynb)
 
 * **LangSmith**
 
+Additionally, we employed a Chain of Thought approach using Langsmith to trace back the generation steps of our chat model, Gemini-Pro. This method enables a meticulous analysis of each response, ensuring logical coherence and alignment with the initial question. This offline evaluation, conducted with a ground-truth dataset curated by our team, provides valuable insights into the effectiveness and accuracy of our recommendation system's responses.
+
 <img src = "https://github.com/convoluted-turtle/CSE-6242-Group-Project/assets/33863191/8abf78ae-5e67-4585-b77a-e3054b30cd09" alt = "LangChain Metrics" width = "700">
 
 LangSmith Prompting Eval Notebook: [here](prompting/langsmith-prompting-eval.ipynb)
@@ -187,20 +199,24 @@ LangSmith Prompting Eval Notebook: [here](prompting/langsmith-prompting-eval.ipy
 
 ### Visualization Creation
 
-#### Poster Display
-
-#### Bar Chart
+In our visualization setup, we employed a dynamic combination of graphical elements to present insights from our recommendation system effectively. Utilizing a bar chart, we showcased the top-rated anime selected by the user's query, offering a clear depiction of popular choices. Box and whisker plots were used to illustrate user favorites across different studios, providing a comprehensive view of studio performance. Additionally, three anime posters, representing the closest matches to the query, offered a visually engaging way to explore recommended titles. Alongside these visualizations, a chat window facilitated real-time interaction with a chatbot, enriching the user experience with personalized responses and recommendations. Positioned at the bottom, a UMAP visualization mapped the positions of item-KNN collaborative filtering, popular recommendations, and vector database recommendations, offering deeper insights into the recommendation landscape.
 
 #### UMAP
 
+
+In our Uniform Manifold Approximation and Projection (UMAP) visual, we carefully select columns such as genre, synopsis, air date, actors' names, studios, producers, and anime score to capture diverse aspects of each anime. UMAP is a dimensionality reduction technique that preserves local and global structure in high-dimensional data, allowing us to visualize the relationships between anime titles in a lower-dimensional space. By leveraging UMAP, we can uncover complex patterns and similarities between anime titles that might not be apparent in the original high-dimensional space.
+
+To enhance recommendation quality, we concatenate embeddings generated from nearest neighbors of 5 using Euclidean distance across different recommendation techniques, including the vector database, item-KNN collaborative filtering, and popular recommendations. This approach enables us to capture nuanced relationships between anime titles based on various factors, fostering a more personalized recommendation experience for users.
+
+Once recommendations are collected, they can be utilized in marketing emails or other communications to encourage users to engage with more content on the site. By tailoring recommendations to individual preferences and interests, we not only promote user engagement but also enhance user satisfaction and retention. 
+
 ![image](https://github.com/convoluted-turtle/CSE-6242-Group-Project/assets/33863191/4db9bea7-2dc4-458b-a09f-79cef207435f)
-
-
-#### Box and Whiskers
 
 ---
 
 ### Application Creation 
+
+This application serves dual purposes: on the left side, it provides customers with an intuitive chat interface for browsing our extensive anime database, enabling them to ask questions and receive personalized recommendations efficiently, enhancing their viewing experience. Meanwhile, on the right side, studio analysts delve into user queries, gaining insights into search patterns and preferences. This analysis empowers them to tailor promotions via email or text to boost engagement and identify trends for potential anime productions. Visual aids, including a bar chart showcasing anime ratings and a box and whisker plot depicting user favorite frequencies, offer valuable insights. The poster display aids studio executives in visually assessing recommended anime relative to the query, facilitating potential redesign considerations. Looking forward, image embeddings will further enrich the user experience. The inclusion of UMAP visualization, integrating various recommendation algorithms, enables the studio to discern the effectiveness of recommendations and optimize promotional strategies for increased traffic.
 
 #### Streamlit Application
 
