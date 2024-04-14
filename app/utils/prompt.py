@@ -25,7 +25,7 @@ def get_template():
 
     Below is an example
     ```
-    Question: can you recommend me 5 animes from the 90
+    Question: can you recommend me 3 animes from the 90
 
     Summary: 
 

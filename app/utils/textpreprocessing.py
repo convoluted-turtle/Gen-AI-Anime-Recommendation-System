@@ -12,7 +12,10 @@ class TextPreprocessor:
         """
         Initializes the TextPreprocessor object.
         """
-        self.nlp = spacy.load("model/spacy") # use spacy cache
+        try:
+            self.nlp = spacy.load("model/spacy") # use spacy cache
+        except:
+            self.nlp = spacy.load("en_core_web_sm")
         tqdm.pandas()
 
     def lemmatize_text(self, text: str) -> list:
