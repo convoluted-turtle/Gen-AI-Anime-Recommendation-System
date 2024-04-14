@@ -107,6 +107,17 @@
 
 #### Prompting Evaluation
 
+* **Rouge**
+
+| Prompt/Metric                | Rouge1  | Rouge2 | RougeL   | RougeLsum |
+|----------------------|-------|----------|-------|--------|
+| Zero-Shot       | 0.22676| 0.07376  | 0.15299| 0.18761 |
+| One-Shot      | 0.21952| 0.06218   | 0.15168| 0.15168 |
+| Few-Shot | 0.27937| 0.06923| 0.16786| 0.17111 |
+
+* **LangChain**
+
+
 ---
 
 ### Visualization Creation
