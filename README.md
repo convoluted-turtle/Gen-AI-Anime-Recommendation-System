@@ -117,7 +117,7 @@
 
 * **LangChain**
 
-
+<img src = "https://github.com/convoluted-turtle/CSE-6242-Group-Project/assets/33863191/8abf78ae-5e67-4585-b77a-e3054b30cd09" alt = "LangChain Metrics" width = "700">
 ---
 
 ### Visualization Creation
