@@ -69,6 +69,7 @@ Wikipedia Image API Notebook: [here](web_scraping/wikipedia_image_scrape.ipynb)
 #### Joining IMDB
 
 Databricks importing Kaggle and IMDB dataset to join Notebook: [here](data_join/imdb_myanime_combine/imdb_data%20-2024-03-12-import.ipynb)
+
 Joining in Actor Names and Pivoting Notebook: [here](data_join/imdb_myanime_combine/imdb_data%20-2024-03-13-createprincipalspivot.ipynb) 
 
 #### Joining Wikipedia
@@ -119,6 +120,7 @@ FAISS Vector DB Notebook: [here](vector_database_creation/faiss_v_db.ipynb)
 ### Prompting
 
 LangChain Prompting Notebook: [here](prompting/guidance_prompting.ipynb) 
+
 Guidance Prompting Notebook: [here](prompting/langchain_prompting.ipynb)
 
 #### Prompt Template Creation
