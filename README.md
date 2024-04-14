@@ -11,9 +11,32 @@ Our solution addresses the challenges faced by modern anime recommendation syste
 TLDR Steps:
 
 1. We started by scraping anime datasets from IMDb and Wikipedia, combining them with the MyAnimeList dataset from Kaggle for comprehensive information.
+    
+    Web Scraping/API:
+    * [IMDB WebScrape](web_scraping/imdb_pull_combine_my_anime.ipynb)
+    * [Wiki API Text](web_scraping/wikipedia_text_pull.ipynb)
+    * [Wiki API Image](web_scraping/wikipedia_image_scrape.ipynb)
+
+    Data Join:
+    * [IMDB Join](data_join/imdb_myanime_combine/imdb_data%20-2024-03-12-import.ipynb)
+    * [Join Actor Names](data_join/imdb_myanime_combine/imdb_data%20-2024-03-13-createprincipalspivot.ipynb) 
+    * [Image Join](web_scraping/wikipedia_image_join.ipynb)
+
 2. Utilizing item-KNN collaborative filtering and pre-computed Thompson sampling for popular recommendations, we enhanced our recommendation algorithms.
+
+    * [Item KNN-CF](recs/item-item-cf.ipynb)
+    * [Thompson Sampling](recs/popular_recs.ipynb)
+
 3. A vector database was constructed using data from Kaggle, IMDb, and Wikipedia, with the text columns from Wikipedia and MyAnimeList serving as embeddings.
+
+    * [FAISS vectorDB](vector_database_creation/faiss_v_db.ipynb)
+
 4. We crafted prompts to ground Gemini-Pro, imbuing it with extended knowledge derived from our comprehensive vector database.
+
+    * [LangChain Prompting](prompting/guidance_prompting.ipynb) 
+    * [Rouge Eval](prompting/prompting-eval.ipynb)
+    * [LangChain Eval](prompting/langsmith-prompting-eval.ipynb)
+    
 5. Visualizations, including UMAP, were developed to showcase recommendations from the vector database, collaborative filtering, and popular suggestions, providing users with a holistic view.
 6. We built a Streamlit application featuring various visualizations, with a chat option available for user interaction. Visualizations were predominantly focused on studio analysis in response to different user queries.
 7. Lastly, the application was dockerized for seamless deployment and scalability.
