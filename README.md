@@ -51,9 +51,16 @@
 
 #### IMDB Actor Scraping
 
+IMDB Scraping Notebook: [here](web_scraping/imdb_pull_combine_my_anime.ipynb)
+
 #### Wikipedia Plot API
 
+WikiPedia Text API Notebook: [here](web_scraping/wikipedia_text_pull.ipynb)
+
 #### Wikipedia Image API
+
+Wikipedia Image API Notebook: [here](web_scraping/wikipedia_image_scrape.ipynb)
+
 
 ---
 
@@ -61,13 +68,20 @@
 
 #### Joining IMDB
 
+Databricks importing Kaggle and IMDB dataset to join Notebook: [here](data_join/imdb_myanime_combine/imdb_data%20-2024-03-12-import.ipynb)
+Joining in Actor Names and Pivoting Notebook: [here](data_join/imdb_myanime_combine/imdb_data%20-2024-03-13-createprincipalspivot.ipynb) 
+
 #### Joining Wikipedia
+
+Wikipedia Image Join to Data Notebook: [here](web_scraping/wikipedia_image_join.ipynb)
 
 ---
 
 ### Collobroative Filtering and Popularity
 
 #### Item-KNN Collabroative Filtering
+
+Item KNN-CF Notebook: [here](recs/item-item-cf.ipynb)
 
 <img src="https://github.com/convoluted-turtle/CSE-6242-Group-Project/assets/33863191/84fe2861-d853-4c19-84b8-228eaebaf56b" alt="item-knn" width="450">
 
@@ -86,6 +100,8 @@
 
 #### Thompson Sampling Popular Recommendation
 
+Popular Notebook: [here](recs/popular_recs.ipynb)
+
 ---
 
 ### Vector DataBase Creation 
@@ -94,11 +110,16 @@
 
 ![image](https://github.com/convoluted-turtle/CSE-6242-Group-Project/assets/33863191/e92ba2d0-673f-4b07-b424-1670a6655ff8)
 
+FAISS Vector DB Notebook: [here](vector_database_creation/faiss_v_db.ipynb)
+
 #### Filter Creation
 
 ---
 
 ### Prompting
+
+LangChain Prompting Notebook: [here](prompting/guidance_prompting.ipynb) 
+Guidance Prompting Notebook: [here](prompting/langchain_prompting.ipynb)
 
 #### Prompt Template Creation
 
@@ -115,9 +136,13 @@
 | One-Shot      | 0.21952| 0.06218   | 0.15168| 0.15168 |
 | Few-Shot | 0.27937| 0.06923| 0.16786| 0.17111 |
 
-* **LangChain**
+Rouge Notebook: [here](prompting/prompting-eval.ipynb)
+
+* **LangSmith**
 
 <img src = "https://github.com/convoluted-turtle/CSE-6242-Group-Project/assets/33863191/8abf78ae-5e67-4585-b77a-e3054b30cd09" alt = "LangChain Metrics" width = "700">
+
+LangSmith Prompting Eval Notebook: [here](prompting/langsmith-prompting-eval.ipynb)
 
 ---
 
