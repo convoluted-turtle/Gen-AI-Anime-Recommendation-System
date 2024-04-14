@@ -5,6 +5,9 @@
 
 <img src="https://github.com/convoluted-turtle/CSE-6242-Group-Project/assets/33863191/edfb1fa8-1288-4248-a59b-b91f60f5933a" alt="intro" width="700">
 
+
+Our solution addresses the challenges faced by modern anime recommendation systems by introducing a hybrid approach enriched with visualizations. By integrating data from IMDB, Wikipedia, and MyAnimeList (MAL), we ensure comprehensive information on series and titles. We tackle cold start scenarios and long-tail issues by employing Item-KNN with a Jaccard similarity filter, guaranteeing diverse and relevant recommendations. Through UMAP visualization, users gain deeper insights into the anime landscape, while industry leaders and researchers benefit from a comprehensive view of consumer sentiment and trends. This approach not only enhances content discovery for fans but also provides a trusted source of truth in the anime community.
+
 ---
 
 ### Dependencies 
@@ -51,13 +54,20 @@
 
 #### IMDB Actor Scraping
 
+
+To further elevate personalization based on users' favorite actors, actresses, or voice actors, we seamlessly integrated casting information from IMDb, enriching our dataset beyond what was available on MyAnimeList (MAL) from Kaggle. By web scraping IMDb, we ensure comprehensive insights into the talent behind each anime, enhancing the recommendation process. This augmentation not only caters to individual preferences but also adds depth to the user experience, aligning with our commitment to providing rich, diverse, and personalized recommendations in the ever-evolving anime landscape.
+
 IMDB Scraping Notebook: [here](web_scraping/imdb_pull_combine_my_anime.ipynb)
 
 #### Wikipedia Plot API
 
+In addressing issues with plot information or anime descriptions, we integrated the Wikipedia API to gather comprehensive summaries and plot details from each anime's Wikipedia page. This dynamic approach ensures that our recommendation system presents accurate and detailed information, enhancing the user experience. By leveraging this additional data source, we enrich our dataset with comprehensive insights, further refining our ability to provide rich, diverse, and personalized recommendations. This fluid integration enables us to overcome limitations and deliver a more comprehensive understanding of each anime, fostering greater engagement and satisfaction among users.
+
 WikiPedia Text API Notebook: [here](web_scraping/wikipedia_text_pull.ipynb)
 
 #### Wikipedia Image API
+
+In addressing broken anime image links, we merged our dataset with MyAnimeList, combining their image with WikiPedia Images. This integration resolves issues of missing or broken image links, ensuring a visually enriched experience for users.
 
 Wikipedia Image API Notebook: [here](web_scraping/wikipedia_image_scrape.ipynb)
 
@@ -68,11 +78,18 @@ Wikipedia Image API Notebook: [here](web_scraping/wikipedia_image_scrape.ipynb)
 
 #### Joining IMDB
 
+
+One of the primary challenges we encountered was matching similar anime titles, such as variations like "Dragon Ball 1, 2, 3, 4," which lacked a common identifier for matching between the IMDb and MyAnimeList datasets. Additionally, language differences posed another hurdle, as some titles were presented in Romanization or Katakana, while Wikipedia often provided the Westernized names. After the join we went with the anime_id as the identfier. 
+
 Databricks importing Kaggle and IMDB dataset to join Notebook: [here](data_join/imdb_myanime_combine/imdb_data%20-2024-03-12-import.ipynb)
 
 Joining in Actor Names and Pivoting Notebook: [here](data_join/imdb_myanime_combine/imdb_data%20-2024-03-13-createprincipalspivot.ipynb) 
 
+MyAnimeList Dataset link: https://www.kaggle.com/datasets/azathoth42/myanimelist
+
 #### Joining Wikipedia
+
+Images were then further joined back in for any broken links.   Another round was done to try to add more selection of anime to the dataset which pushed the number of recommended content to about 8000. 
 
 Wikipedia Image Join to Data Notebook: [here](web_scraping/wikipedia_image_join.ipynb)
 
@@ -81,6 +98,9 @@ Wikipedia Image Join to Data Notebook: [here](web_scraping/wikipedia_image_join.
 ### Collobroative Filtering and Popularity
 
 #### Item-KNN Collabroative Filtering
+
+
+To utilize insights from the click history dataset sourced from MyAnimeList on Kaggle, we implemented an item-to-item collaborative filtering. This technique utilizes adjusted cosine similarity to get anime titles based on user click behavior. By leveraging this approach, we effectively capture user preferences and recommend similar anime titles, enriching the recommendation process with personalized and relevant suggestions. 
 
 Item KNN-CF Notebook: [here](recs/item-item-cf.ipynb)
 
@@ -101,13 +121,19 @@ Item KNN-CF Notebook: [here](recs/item-item-cf.ipynb)
 
 #### Thompson Sampling Popular Recommendation
 
+In our recommendation system, we employed Thompson sampling as it offers significant advantages over simply relying on frequency-based methods. Unlike frequency-based approaches, which prioritize items based solely on their popularity or occurrence frequency, Thompson sampling dynamically balances exploration and exploitation. By leveraging probabilistic sampling, Thompson sampling allows our system to continually explore lesser-known anime titles while exploiting the knowledge gained from user interactions. This adaptive strategy not only promotes diversity in recommendations but also maximizes long-term user engagement by continually learning and adapting to evolving preferences and trends. 
+
 Popular Notebook: [here](recs/popular_recs.ipynb)
 
 ---
 
 ### Vector DataBase Creation 
 
-#### Faiss Vector Database Creation
+#### FAISS Vector Database Creation
+
+To enhance our recommendation system further, we integrated Thompson sampling and item-to-item collaborative filtering, into a unified framework using a vector database powered by FAISS. This would boost the diversity and range of recommendations we could recommend to the user. 
+
+Additionally, we incorporated a metadata filtering that takes into account various factors such as genre, actors, producers, ratings, and studios. Furthermore, our vector database employs a hybrid search approach, combining keyword-based searches with dense vector cosine similarity for efficient document retrieval. 
 
 ![image](https://github.com/convoluted-turtle/CSE-6242-Group-Project/assets/33863191/e92ba2d0-673f-4b07-b424-1670a6655ff8)
 
@@ -115,13 +141,21 @@ FAISS Vector DB Notebook: [here](vector_database_creation/faiss_v_db.ipynb)
 
 #### Filter Creation
 
+
+This filter function is designed to sift through retrieved documents based on their metadata attributes. It begins by extracting relevant metadata tokens, such as studio, producer, licensors, and genre, from each document. The function then iterates through a list of query tokens, checking if any of them match with the metadata tokens. Additionally, it considers documents with a score higher than a rating score a user might prefer to pass the filter. If any metadata attribute matches any query token, the document is deemed to pass the filter. 
+
 ---
 
 ### Prompting
 
+
+We employed Langchain to orchestrate our retrieval-augmented generation pipeline, streamlining the process of generating personalized recommendations. Using a four-shot prompt, we infused the chatbot with the persona of an avid anime lover, ensuring that recommendations are tailored to the tastes and preferences of anime enthusiasts. This persona-based approach enables the chatbot to engage with users on a more personal level, understanding their unique interests and providing relevant suggestions accordingly. 
+
 LangChain Prompting Notebook: [here](prompting/guidance_prompting.ipynb) 
 
 Guidance Prompting Notebook: [here](prompting/langchain_prompting.ipynb)
+
+LLM used Gemini Pro: https://gemini.google.com
 
 #### Prompt Template Creation
 
@@ -129,6 +163,9 @@ Guidance Prompting Notebook: [here](prompting/langchain_prompting.ipynb)
 
 
 #### Prompting Evaluation
+
+
+In our evaluation process, we utilized Rouge scores, a set of metrics commonly employed in natural language processing tasks to assess the quality of generated text against reference summaries or ground truth. Rouge-1 measures the overlap of unigram (single word) sequences between the generated text and the reference summary. Rouge-2 extends this to measure the overlap of bigram (two-word) sequences. Rouge-L computes the longest common subsequence between the generated text and the reference summary, considering the length of the longest common subsequence. Rouge-Lsum evaluates the average Rouge-L score across multiple reference summaries. Additionally, we employed a Chain of Thought approach using Langsmith to trace back the generation steps of our chat model, Gemini-Pro. This method enables a meticulous analysis of each response, ensuring logical coherence and alignment with the initial question. This offline evaluation, conducted with a ground-truth dataset curated by our team, provides valuable insights into the effectiveness and accuracy of our recommendation system's responses.
 
 * **Rouge**
 
